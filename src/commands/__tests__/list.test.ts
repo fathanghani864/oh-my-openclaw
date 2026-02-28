@@ -14,7 +14,9 @@ describe('listCommand', () => {
   beforeEach(async () => {
     output = [];
     console.log = (...args: unknown[]) => {
-      output.push(args.map(String).join(' '));
+      // Strip ANSI escape codes so regex matching works regardless of color support
+      const stripped = args.map(String).join(' ').replace(/\x1b\[[0-9;]*m/g, '');
+      output.push(stripped);
     };
 
     tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), 'openclaw-list-test-'));
