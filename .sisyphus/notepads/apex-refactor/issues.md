@@ -11,3 +11,15 @@
 ## [TASK-0 COMPLETE] demo-researcher repo created at https://github.com/minpeter/demo-researcher
 
 ## [TASK-1 COMPLETE] Legacy presets deleted, index.ts now ['apex'] only
+
+## [TASK-2] list.test.ts updated to expect 1 apex preset (was 5)
+
+## [TASK-3] apply.test.ts "gateway restart reminder" test updated to use apex preset
+
+## [TASK-4] diff.test.ts updated: 4 diffCommand calls changed to apex, workspace assertions updated to 5 files
+
+## [TASK-5] integration.test.ts updated: developer/researcher replaced with apex in 4 places
+
+## [TASK-7] install command added to cli.ts — alias for apply apex with same options
+
+## [TASK-6] --clean flag added to apply command. Critical ordering: resolveWorkspaceDir before config deletion.
