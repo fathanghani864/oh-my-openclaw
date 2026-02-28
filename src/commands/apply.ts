@@ -19,6 +19,7 @@ interface ApplyOptions {
   dryRun?: boolean;
   noBackup?: boolean;
   clean?: boolean;
+  force?: boolean;
 }
 
 function resolveBuiltinPresetDir(presetName: string): string {
