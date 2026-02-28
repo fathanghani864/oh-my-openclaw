@@ -69,14 +69,14 @@ Build a TypeScript+Bun CLI tool that manages OpenClaw configuration presets, ena
 - Full test suite (TDD)
 
 ### Definition of Done
-- [ ] `oh-my-openclaw list` shows built-in + user presets with metadata
-- [ ] `oh-my-openclaw apply developer` merges preset into current config + copies MD files to workspace
-- [ ] `oh-my-openclaw export my-setup` creates preset from current config + workspace MD files
-- [ ] `oh-my-openclaw diff developer` shows colorized diff of current vs preset config
-- [ ] All auth/env/meta/credential fields are excluded from export and never overwritten by apply
-- [ ] Backup created before every apply
-- [ ] `bun test` passes with all tests green
-- [ ] Single binary compiles via `bun build --compile`
+- [x] `oh-my-openclaw list` shows built-in + user presets with metadata
+- [x] `oh-my-openclaw apply developer` merges preset into current config + copies MD files to workspace
+- [x] `oh-my-openclaw export my-setup` creates preset from current config + workspace MD files
+- [x] `oh-my-openclaw diff developer` shows colorized diff of current vs preset config
+- [x] All auth/env/meta/credential fields are excluded from export and never overwritten by apply
+- [x] Backup created before every apply
+- [x] `bun test` passes with all tests green
+- [x] Single binary compiles via `bun build --compile`
 
 ### Must Have
 - Config path resolution respects `OPENCLAW_CONFIG_PATH` and `OPENCLAW_STATE_DIR` environment variables
@@ -198,7 +198,7 @@ Max Concurrent: 5 (Wave 1)
 ## TODOs
 
 
-- [ ] 1. Project Scaffolding + Tooling Config
+- [x] 1. Project Scaffolding + Tooling Config
 
   **What to do**:
   - Initialize Bun project: `bun init` with `name: "oh-my-openclaw"`, `type: "module"`
@@ -239,10 +239,10 @@ Max Concurrent: 5 (Wave 1)
   - commander.js: https://github.com/tj/commander.js — CLI parsing library
 
   **Acceptance Criteria**:
-  - [ ] `bun test` runs and exits 0 (1 placeholder test passes)
-  - [ ] `bun run typecheck` exits 0 (no TS errors)
-  - [ ] `package.json` has `build:compile` script with `--compile --bytecode`
-  - [ ] All 4 directories exist: `src/commands/`, `src/core/`, `src/presets/`, `src/__tests__/`
+  - [x] `bun test` runs and exits 0 (1 placeholder test passes)
+  - [x] `bun run typecheck` exits 0 (no TS errors)
+  - [x] `package.json` has `build:compile` script with `--compile --bytecode`
+  - [x] All 4 directories exist: `src/commands/`, `src/core/`, `src/presets/`, `src/__tests__/`
 
   **QA Scenarios (MANDATORY):**
   ```
@@ -273,7 +273,7 @@ Max Concurrent: 5 (Wave 1)
 
 ---
 
-- [ ] 2. Type Definitions + Constants
+- [x] 2. Type Definitions + Constants
 
   **What to do**:
   - Create `src/core/types.ts` with all shared types:
@@ -335,9 +335,9 @@ Max Concurrent: 5 (Wave 1)
   - Sensitive fields: auth-profiles.json is separate file; env section can contain plaintext API keys; meta section is auto-managed
 
   **Acceptance Criteria**:
-  - [ ] `bun run typecheck` passes with all types defined
-  - [ ] SENSITIVE_FIELDS array contains at minimum: auth, env, meta, gateway.auth, hooks.token
-  - [ ] WORKSPACE_FILES array contains all 7 standard workspace files
+  - [x] `bun run typecheck` passes with all types defined
+  - [x] SENSITIVE_FIELDS array contains at minimum: auth, env, meta, gateway.auth, hooks.token
+  - [x] WORKSPACE_FILES array contains all 7 standard workspace files
 
   **QA Scenarios (MANDATORY):**
   ```
@@ -356,7 +356,7 @@ Max Concurrent: 5 (Wave 1)
 
 ---
 
-- [ ] 3. Config Path Resolver Module
+- [x] 3. Config Path Resolver Module
 
   **What to do**:
   - Create `src/core/config-path.ts` that resolves OpenClaw config file location
@@ -396,10 +396,10 @@ Max Concurrent: 5 (Wave 1)
   - Node.js `os.homedir()` — for `~` expansion
 
   **Acceptance Criteria**:
-  - [ ] Test: default resolution returns `$HOME/.openclaw/openclaw.json`
-  - [ ] Test: `OPENCLAW_CONFIG_PATH=/tmp/custom.json` returns that exact path
-  - [ ] Test: `OPENCLAW_STATE_DIR=/tmp/state` returns `/tmp/state/openclaw.json`
-  - [ ] Test: presetsDir = `{stateDir}/oh-my-openclaw/presets/`
+  - [x] Test: default resolution returns `$HOME/.openclaw/openclaw.json`
+  - [x] Test: `OPENCLAW_CONFIG_PATH=/tmp/custom.json` returns that exact path
+  - [x] Test: `OPENCLAW_STATE_DIR=/tmp/state` returns `/tmp/state/openclaw.json`
+  - [x] Test: presetsDir = `{stateDir}/oh-my-openclaw/presets/`
 
   **QA Scenarios (MANDATORY):**
   ```
@@ -425,7 +425,7 @@ Max Concurrent: 5 (Wave 1)
 
 ---
 
-- [ ] 4. JSON5 Read/Write Utilities
+- [x] 4. JSON5 Read/Write Utilities
 
   **What to do**:
   - Create `src/core/json5-utils.ts` with:
@@ -460,11 +460,11 @@ Max Concurrent: 5 (Wave 1)
   - OpenClaw config uses JSON5 features: unquoted keys, trailing commas, `//` comments
 
   **Acceptance Criteria**:
-  - [ ] Test: reads a valid JSON5 file with comments and trailing commas
-  - [ ] Test: writes JSON5 with 2-space indent
-  - [ ] Test: throws descriptive error for missing file
-  - [ ] Test: throws descriptive error for invalid JSON5 syntax
-  - [ ] Test: empty file returns `{}`
+  - [x] Test: reads a valid JSON5 file with comments and trailing commas
+  - [x] Test: writes JSON5 with 2-space indent
+  - [x] Test: throws descriptive error for missing file
+  - [x] Test: throws descriptive error for invalid JSON5 syntax
+  - [x] Test: empty file returns `{}`
 
   **QA Scenarios (MANDATORY):**
   ```
@@ -491,7 +491,7 @@ Max Concurrent: 5 (Wave 1)
 
 ---
 
-- [ ] 5. Deep Merge Engine (TDD)
+- [x] 5. Deep Merge Engine (TDD)
 
   **What to do**:
   - Create `src/core/merge.ts` with:
@@ -540,11 +540,11 @@ Max Concurrent: 5 (Wave 1)
   - oh-my-posh pattern: scalar=override, map=merge, slice=replace (closest to OpenClaw's approach)
 
   **Acceptance Criteria**:
-  - [ ] Test: 9+ test cases covering all merge scenarios
-  - [ ] Test: inputs are NEVER mutated (verified by Object.freeze)
-  - [ ] Test: 3-level deep merge works correctly
-  - [ ] Test: null deletes key, undefined preserves base value
-  - [ ] `bun test src/core/__tests__/merge.test.ts` → all pass
+  - [x] Test: 9+ test cases covering all merge scenarios
+  - [x] Test: inputs are NEVER mutated (verified by Object.freeze)
+  - [x] Test: 3-level deep merge works correctly
+  - [x] Test: null deletes key, undefined preserves base value
+  - [x] `bun test src/core/__tests__/merge.test.ts` → all pass
 
   **QA Scenarios (MANDATORY):**
   ```
@@ -581,7 +581,7 @@ Max Concurrent: 5 (Wave 1)
 
 ---
 
-- [ ] 6. Workspace MD File Resolver + Copier
+- [x] 6. Workspace MD File Resolver + Copier
 
   **What to do**:
   - Create `src/core/workspace.ts` with:
@@ -612,11 +612,11 @@ Max Concurrent: 5 (Wave 1)
   - Multi-agent: `agents.list[n].workspace` can override per agent — for MVP, only handle `agents.defaults.workspace`
 
   **Acceptance Criteria**:
-  - [ ] Test: resolves `agents.defaults.workspace` from config
-  - [ ] Test: falls back to `{stateDir}/workspace` when not in config
-  - [ ] Test: lists only existing MD files (skips missing ones)
-  - [ ] Test: copies files byte-exact
-  - [ ] Test: handles missing workspace dir gracefully
+  - [x] Test: resolves `agents.defaults.workspace` from config
+  - [x] Test: falls back to `{stateDir}/workspace` when not in config
+  - [x] Test: lists only existing MD files (skips missing ones)
+  - [x] Test: copies files byte-exact
+  - [x] Test: handles missing workspace dir gracefully
 
   **QA Scenarios (MANDATORY):**
   ```
@@ -650,7 +650,7 @@ Max Concurrent: 5 (Wave 1)
 
 ---
 
-- [ ] 7. Backup Manager
+- [x] 7. Backup Manager
 
   **What to do**:
   - Create `src/core/backup.ts` with:
@@ -681,10 +681,10 @@ Max Concurrent: 5 (Wave 1)
   - OpenClaw already uses `.bak` through `.bak.4` (max 5 rotation) — our backups MUST be in `~/.openclaw/oh-my-openclaw/backups/` to avoid collision
 
   **Acceptance Criteria**:
-  - [ ] Test: creates timestamped backup file
-  - [ ] Test: backup content matches original byte-for-byte
-  - [ ] Test: backupsDir auto-created if missing
-  - [ ] Test: listBackups returns sorted (newest first)
+  - [x] Test: creates timestamped backup file
+  - [x] Test: backup content matches original byte-for-byte
+  - [x] Test: backupsDir auto-created if missing
+  - [x] Test: listBackups returns sorted (newest first)
 
   **QA Scenarios (MANDATORY):**
   ```
@@ -709,7 +709,7 @@ Max Concurrent: 5 (Wave 1)
 
 ---
 
-- [ ] 8. Sensitive Fields Filter
+- [x] 8. Sensitive Fields Filter
 
   **What to do**:
   - Create `src/core/sensitive-filter.ts` with:
@@ -743,11 +743,11 @@ Max Concurrent: 5 (Wave 1)
   - `channels.*.botToken`/`.token`: per-channel bot tokens
 
   **Acceptance Criteria**:
-  - [ ] Test: top-level `auth`, `env`, `meta` completely removed
-  - [ ] Test: `gateway.auth.token` removed but `gateway.port` preserved
-  - [ ] Test: `channels.discord.token` removed but `channels.discord.guilds` preserved
-  - [ ] Test: `models.providers.custom.apiKey` removed but `models.providers.custom.baseUrl` preserved
-  - [ ] Test: input object is not mutated
+  - [x] Test: top-level `auth`, `env`, `meta` completely removed
+  - [x] Test: `gateway.auth.token` removed but `gateway.port` preserved
+  - [x] Test: `channels.discord.token` removed but `channels.discord.guilds` preserved
+  - [x] Test: `models.providers.custom.apiKey` removed but `models.providers.custom.baseUrl` preserved
+  - [x] Test: input object is not mutated
 
   **QA Scenarios (MANDATORY):**
   ```
@@ -787,7 +787,7 @@ Max Concurrent: 5 (Wave 1)
 
 ---
 
-- [ ] 9. Preset Loader + Validator
+- [x] 9. Preset Loader + Validator
 
   **What to do**:
   - Create `src/core/preset-loader.ts` with:
@@ -820,12 +820,12 @@ Max Concurrent: 5 (Wave 1)
   - Preset directory structure: `presets/developer/preset.json5` + `presets/developer/AGENTS.md` + `presets/developer/SOUL.md` etc.
 
   **Acceptance Criteria**:
-  - [ ] Test: loads valid preset.json5 from directory
-  - [ ] Test: throws on missing preset.json5
-  - [ ] Test: throws on missing required fields (name, description, version)
-  - [ ] Test: listPresets merges built-in + user presets
-  - [ ] Test: user preset overrides built-in with same name
-  - [ ] Test: savePreset creates directory + writes preset.json5 + copies MD files
+  - [x] Test: loads valid preset.json5 from directory
+  - [x] Test: throws on missing preset.json5
+  - [x] Test: throws on missing required fields (name, description, version)
+  - [x] Test: listPresets merges built-in + user presets
+  - [x] Test: user preset overrides built-in with same name
+  - [x] Test: savePreset creates directory + writes preset.json5 + copies MD files
 
   **QA Scenarios (MANDATORY):**
   ```
@@ -857,7 +857,7 @@ Max Concurrent: 5 (Wave 1)
 
 ---
 
-- [ ] 10. Built-in Preset Templates
+- [x] 10. Built-in Preset Templates
 
   **What to do**:
   - Create 4 preset directories under `src/presets/`:
@@ -908,11 +908,11 @@ Max Concurrent: 5 (Wave 1)
   - OpenClaw model format: `provider/model-name` (e.g., `anthropic/claude-sonnet-4-5`)
 
   **Acceptance Criteria**:
-  - [ ] 4 preset directories exist: default, developer, researcher, creative
-  - [ ] Each has valid preset.json5 with name, description, version
-  - [ ] Each has at least AGENTS.md and SOUL.md
-  - [ ] Test: all 4 presets load successfully via preset-loader
-  - [ ] No secrets/tokens/API keys in any preset file
+  - [x] 4 preset directories exist: default, developer, researcher, creative
+  - [x] Each has valid preset.json5 with name, description, version
+  - [x] Each has at least AGENTS.md and SOUL.md
+  - [x] Test: all 4 presets load successfully via preset-loader
+  - [x] No secrets/tokens/API keys in any preset file
 
   **QA Scenarios (MANDATORY):**
   ```
@@ -943,7 +943,7 @@ Max Concurrent: 5 (Wave 1)
 
 ---
 
-- [ ] 11. `list` Command
+- [x] 11. `list` Command
 
   **What to do**:
   - Create `src/commands/list.ts`:
@@ -973,10 +973,10 @@ Max Concurrent: 5 (Wave 1)
   - `picocolors` npm package for terminal colors
 
   **Acceptance Criteria**:
-  - [ ] Test: lists built-in presets (4 entries)
-  - [ ] Test: includes user presets from presets dir
-  - [ ] Test: `--json` flag outputs valid JSON array
-  - [ ] Shows name, description, version, source for each preset
+  - [x] Test: lists built-in presets (4 entries)
+  - [x] Test: includes user presets from presets dir
+  - [x] Test: `--json` flag outputs valid JSON array
+  - [x] Shows name, description, version, source for each preset
 
   **QA Scenarios (MANDATORY):**
   ```
@@ -1002,7 +1002,7 @@ Max Concurrent: 5 (Wave 1)
 
 ---
 
-- [ ] 12. `apply` Command
+- [x] 12. `apply` Command
 
   **What to do**:
   - Create `src/commands/apply.ts` — the most critical command:
@@ -1046,14 +1046,14 @@ Max Concurrent: 5 (Wave 1)
   - OpenClaw config gateway: user must run `openclaw gateway restart` after config changes
 
   **Acceptance Criteria**:
-  - [ ] Test: applies preset config via deep merge
-  - [ ] Test: copies preset MD files to workspace
-  - [ ] Test: creates backup before writing
-  - [ ] Test: `--dry-run` shows changes without writing
-  - [ ] Test: sensitive fields in preset are filtered out before merge
-  - [ ] Test: prints gateway restart reminder
-  - [ ] Test: handles preset with only MD files (no config)
-  - [ ] Test: handles preset with only config (no MD files)
+  - [x] Test: applies preset config via deep merge
+  - [x] Test: copies preset MD files to workspace
+  - [x] Test: creates backup before writing
+  - [x] Test: `--dry-run` shows changes without writing
+  - [x] Test: sensitive fields in preset are filtered out before merge
+  - [x] Test: prints gateway restart reminder
+  - [x] Test: handles preset with only MD files (no config)
+  - [x] Test: handles preset with only config (no MD files)
 
   **QA Scenarios (MANDATORY):**
   ```
@@ -1090,7 +1090,7 @@ Max Concurrent: 5 (Wave 1)
 
 ---
 
-- [ ] 13. `export` Command
+- [x] 13. `export` Command
 
   **What to do**:
   - Create `src/commands/export.ts`:
@@ -1126,11 +1126,11 @@ Max Concurrent: 5 (Wave 1)
   - Workspace resolver (Task 6): used to find and copy MD files
 
   **Acceptance Criteria**:
-  - [ ] Test: creates preset directory with preset.json5 + MD files
-  - [ ] Test: sensitive fields are excluded from exported config
-  - [ ] Test: errors on duplicate name (without --force)
-  - [ ] Test: `--force` overwrites existing preset
-  - [ ] Test: workspace MD files are copied
+  - [x] Test: creates preset directory with preset.json5 + MD files
+  - [x] Test: sensitive fields are excluded from exported config
+  - [x] Test: errors on duplicate name (without --force)
+  - [x] Test: `--force` overwrites existing preset
+  - [x] Test: workspace MD files are copied
 
   **QA Scenarios (MANDATORY):**
   ```
@@ -1161,7 +1161,7 @@ Max Concurrent: 5 (Wave 1)
 
 ---
 
-- [ ] 14. `diff` Command
+- [x] 14. `diff` Command
 
   **What to do**:
   - Create `src/commands/diff.ts`:
@@ -1199,11 +1199,11 @@ Max Concurrent: 5 (Wave 1)
   - Key-by-key comparison: traverse both objects, report additions/removals/changes at each path
 
   **Acceptance Criteria**:
-  - [ ] Test: shows added keys in green
-  - [ ] Test: shows changed values with old → new
-  - [ ] Test: shows removed keys (null) in red
-  - [ ] Test: `--json` produces valid JSON diff
-  - [ ] Test: reports workspace file differences (files that would be added/replaced)
+  - [x] Test: shows added keys in green
+  - [x] Test: shows changed values with old → new
+  - [x] Test: shows removed keys (null) in red
+  - [x] Test: `--json` produces valid JSON diff
+  - [x] Test: reports workspace file differences (files that would be added/replaced)
 
   **QA Scenarios (MANDATORY):**
   ```
@@ -1230,7 +1230,7 @@ Max Concurrent: 5 (Wave 1)
 
 ---
 
-- [ ] 15. CLI Entry Point + Commander Setup
+- [x] 15. CLI Entry Point + Commander Setup
 
   **What to do**:
   - Create `src/cli.ts` as the main entry point:
@@ -1260,11 +1260,11 @@ Max Concurrent: 5 (Wave 1)
   - `openclaw/openclaw` CLI (`src/cli/`) as pattern reference for commander setup
 
   **Acceptance Criteria**:
-  - [ ] `bun src/cli.ts --help` shows all 4 commands
-  - [ ] `bun src/cli.ts --version` shows version from package.json
-  - [ ] `bun src/cli.ts list` works end-to-end
-  - [ ] `bun src/cli.ts apply --help` shows apply-specific options
-  - [ ] Unknown command shows error + help
+  - [x] `bun src/cli.ts --help` shows all 4 commands
+  - [x] `bun src/cli.ts --version` shows version from package.json
+  - [x] `bun src/cli.ts list` works end-to-end
+  - [x] `bun src/cli.ts apply --help` shows apply-specific options
+  - [x] Unknown command shows error + help
 
   **QA Scenarios (MANDATORY):**
   ```
@@ -1290,7 +1290,7 @@ Max Concurrent: 5 (Wave 1)
 
 ---
 
-- [ ] 16. Binary Compilation + Asset Embedding
+- [x] 16. Binary Compilation + Asset Embedding
 
   **What to do**:
   - Update `package.json` build scripts:
@@ -1327,10 +1327,10 @@ Max Concurrent: 5 (Wave 1)
   - `peterbe/gg2` package.json: `--compile --bytecode` for faster startup
 
   **Acceptance Criteria**:
-  - [ ] `bun run build:compile` produces `dist/oh-my-openclaw` binary
-  - [ ] Binary runs without `bun` installed: `./dist/oh-my-openclaw --version`
-  - [ ] `./dist/oh-my-openclaw list` shows built-in presets from embedded assets
-  - [ ] Binary size is reasonable (< 100MB)
+  - [x] `bun run build:compile` produces `dist/oh-my-openclaw` binary
+  - [x] Binary runs without `bun` installed: `./dist/oh-my-openclaw --version`
+  - [x] `./dist/oh-my-openclaw list` shows built-in presets from embedded assets
+  - [x] Binary size is reasonable (< 100MB)
 
   **QA Scenarios (MANDATORY):**
   ```
@@ -1352,7 +1352,7 @@ Max Concurrent: 5 (Wave 1)
 
 ---
 
-- [ ] 17. Integration Tests + Edge Cases
+- [x] 17. Integration Tests + Edge Cases
 
   **What to do**:
   - Create `src/__tests__/integration.test.ts` with end-to-end scenarios:
@@ -1387,11 +1387,11 @@ Max Concurrent: 5 (Wave 1)
   - All commands (Tasks 11-14) — called via the CLI entry point
 
   **Acceptance Criteria**:
-  - [ ] Full workflow test passes (export → list → diff → apply → diff)
-  - [ ] All 8 edge cases tested and handled
-  - [ ] No tests touch real ~/.openclaw/
-  - [ ] All tests clean up temp directories
-  - [ ] `bun test` runs all tests (unit + integration) and all pass
+  - [x] Full workflow test passes (export → list → diff → apply → diff)
+  - [x] All 8 edge cases tested and handled
+  - [x] No tests touch real ~/.openclaw/
+  - [x] All tests clean up temp directories
+  - [x] `bun test` runs all tests (unit + integration) and all pass
 
   **QA Scenarios (MANDATORY):**
   ```
@@ -1426,19 +1426,19 @@ Max Concurrent: 5 (Wave 1)
 
 > 4 review agents run in PARALLEL. ALL must APPROVE. Rejection → fix → re-run.
 
-- [ ] F1. **Plan Compliance Audit** — `oracle`
+- [x] F1. **Plan Compliance Audit** — `oracle`
   Read the plan end-to-end. For each "Must Have": verify implementation exists (read file, run command). For each "Must NOT Have": search codebase for forbidden patterns — reject with file:line if found. Check evidence files exist in .sisyphus/evidence/. Compare deliverables against plan.
   Output: `Must Have [N/N] | Must NOT Have [N/N] | Tasks [N/N] | VERDICT: APPROVE/REJECT`
 
-- [ ] F2. **Code Quality Review** — `unspecified-high`
+- [x] F2. **Code Quality Review** — `unspecified-high`
   Run `tsc --noEmit` + `bun test`. Review all files for: `as any`/`@ts-ignore`, empty catches, console.log in prod, commented-out code, unused imports. Check AI slop: excessive comments, over-abstraction, generic names.
   Output: `Build [PASS/FAIL] | Tests [N pass/N fail] | Files [N clean/N issues] | VERDICT`
 
-- [ ] F3. **Real Manual QA** — `unspecified-high`
+- [x] F3. **Real Manual QA** — `unspecified-high`
   Start from clean state. Execute EVERY QA scenario from EVERY task. Test cross-command integration (export → list → diff → apply → diff again). Test edge cases: missing config, empty workspace, preset with only MD files. Save evidence to `.sisyphus/evidence/final-qa/`.
   Output: `Scenarios [N/N pass] | Integration [N/N] | Edge Cases [N tested] | VERDICT`
 
-- [ ] F4. **Scope Fidelity Check** — `deep`
+- [x] F4. **Scope Fidelity Check** — `deep`
   For each task: read "What to do", read actual diff. Verify 1:1. Check "Must NOT do" compliance. Detect cross-task contamination. Flag unaccounted changes.
   Output: `Tasks [N/N compliant] | Contamination [CLEAN/N issues] | Unaccounted [CLEAN/N files] | VERDICT`
 
@@ -1466,11 +1466,11 @@ bun build src/cli.ts --compile --outfile dist/oh-my-openclaw  # Expected: binary
 ```
 
 ### Final Checklist
-- [ ] All "Must Have" present
-- [ ] All "Must NOT Have" absent
-- [ ] All tests pass (`bun test`)
-- [ ] Binary compiles and runs standalone
-- [ ] Built-in presets work from compiled binary
-- [ ] Sensitive fields never appear in exports
-- [ ] Backups created before every apply
-- [ ] Config path resolution respects env vars
+- [x] All "Must Have" present
+- [x] All "Must NOT Have" absent
+- [x] All tests pass (`bun test`)
+- [x] Binary compiles and runs standalone
+- [x] Built-in presets work from compiled binary
+- [x] Sensitive fields never appear in exports
+- [x] Backups created before every apply
+- [x] Config path resolution respects env vars

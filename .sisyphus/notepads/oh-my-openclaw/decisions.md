@@ -38,3 +38,6 @@
 ## [2026-03-01] Task 10 Built-in Preset Templates
 - Added four built-in presets under `src/presets/` (`default`, `developer`, `researcher`, `creative`) with identical manifest schema and persona-specific identity/model/tool defaults.
 - Standardized built-in workspace scaffolding to exactly `AGENTS.md` + `SOUL.md` for all templates.
+
+## [2026-03-01] Import Path Extension Fix
+- Enforced project convention for relative imports: omit `.ts` extension in source files to stay compatible with TypeScript `bundler` resolution.

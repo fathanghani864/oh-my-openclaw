@@ -1,8 +1,8 @@
 import path from 'node:path';
 import fs from 'node:fs/promises';
-import { readJson5, writeJson5 } from './json5-utils.ts';
-import { PRESET_MANIFEST_FILENAME } from './constants.ts';
-import type { PresetManifest } from './types.ts';
+import { readJson5, writeJson5 } from './json5-utils';
+import { PRESET_MANIFEST_FILENAME } from './constants';
+import type { PresetManifest } from './types';
 
 // Reads preset.json5 from a preset directory, validates required fields
 export async function loadPreset(presetPath: string): Promise<PresetManifest> {

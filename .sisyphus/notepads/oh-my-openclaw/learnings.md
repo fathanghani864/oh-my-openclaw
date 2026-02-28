@@ -114,6 +114,10 @@ Cast each level separately — avoids deep nested casting errors.
 - `loadPreset('./src/presets/<name>')` smoke check passes for `default`, `developer`, `researcher`, `creative`.
 - Keep tools allow-lists minimal and explicit per persona (`developer` and `researcher` only where needed).
 
+## [2026-03-01] Import Path Extension Fix
+- With `moduleResolution: bundler`, relative TypeScript imports should omit `.ts` extensions (`'./x'`, not `'./x.ts'`) to avoid TS5097.
+- Scoped fix can be done by changing import specifier strings only; no logic changes are needed.
+
 ## Task 9 - Preset Loader (2026-03-01)
 
 ### Pattern: temp dir cleanup in tests

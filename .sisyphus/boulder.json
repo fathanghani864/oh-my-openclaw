@@ -1,9 +1,14 @@
 {
-  "active_plan": "/Users/minpeter/github.com/minpeter/oh-my-openclaw/.sisyphus/plans/oh-my-openclaw.md",
+"active_plan": "/Users/minpeter/github.com/minpeter/oh-my-openclaw/.sisyphus/plans/oh-my-openclaw.md",
   "started_at": "2026-02-28T16:44:21.756Z",
-  "session_ids": [
-    "ses_35b071bd0ffey1SGIgdJFTRg4h"
-  ],
-  "plan_name": "oh-my-openclaw",
-  "agent": "atlas"
+  "completed_at": "2026-03-01T00:00:00.000Z",
+  "status": "completed",
+"session_ids": [
+"ses_35b071bd0ffey1SGIgdJFTRg4h"
+],
+"plan_name": "oh-my-openclaw",
+"agent": "atlas",
+  "worktree_path": "/Users/minpeter/github.com/minpeter/oh-my-openclaw",
+  "tasks_total": 119,
+  "tasks_completed": 119
 }

@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import JSON5 from 'json5';
 
-import type { ConfigSnapshot } from './types.ts';
+import type { ConfigSnapshot } from './types';
 
 export async function readJson5(filePath: string): Promise<ConfigSnapshot> {
   let raw: string;

@@ -1,6 +1,6 @@
 import path from 'node:path';
 import fs from 'node:fs/promises';
-import { WORKSPACE_FILES } from './constants.ts';
+import { WORKSPACE_FILES } from './constants';
 
 // Reads agents.defaults.workspace from parsed config, falls back to {stateDir}/workspace
 export function resolveWorkspaceDir(
