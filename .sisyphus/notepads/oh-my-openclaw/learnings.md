@@ -39,3 +39,72 @@
 ### Test + Verification Pattern
 - Keep a minimal Bun test in `src/__tests__/placeholder.test.ts` to guarantee green CI baseline from day one.
 - Save repeatable smoke-test evidence under `.sisyphus/evidence/` to preserve bootstrapping traceability.
+
+## [2026-03-01] Task 2 Type Definitions + Constants
+
+### Core Contracts
+- Keep OpenClaw-facing types minimal and local (`PresetManifest`, `ResolvedPaths`, `ConfigSnapshot`) without importing upstream internal types.
+- Export shared constants from `src/core/constants.ts` to centralize sensitive-path and workspace-file conventions.
+
+### Testing Notes
+- `as const` arrays require typed expected values in tests (`Array<(typeof SENSITIVE_FIELDS)[number]>`) to satisfy TypeScript overload checks.
+- Assert both structural constraints (length checks) and exact semantic values for workspace files and path-based constants.
+
+## [2026-03-01] Task 4 JSON5 Utilities
+
+### JSON5 IO Patterns
+- `readJson5` should return `{ raw, parsed, path }` and normalize empty/whitespace-only files to `parsed: {}`.
+- Parse errors should preserve path context (`Invalid JSON5 in <path>`) to simplify CLI troubleshooting.
+- Missing file errors should be normalized to `Cannot read file: <path>` instead of leaking raw fs error wording.
+
+### Test Strategy
+- Use per-test temp directories under `/tmp` with `mkdtemp` + `afterEach` cleanup to guarantee isolation.
+- Verify write formatting through nested-object indentation checks to lock 2-space JSON5 stringify behavior.
+
+## [2026-03-01] Task 5 Deep Merge Engine
+
+### TDD Execution
+- Start with `src/core/__tests__/merge.test.ts` first and run the single-file suite to confirm RED state when `../merge` is missing.
+- Cover all required merge semantics with 10 tests, including mixed object/array overrides and frozen-input immutability checks.
+
+### Merge Semantics Lock-in
+- `null` in override deletes a key from the merged result (`'key' in result` becomes `false`).
+- `undefined` in override is treated as no-op and preserves base values.
+- Recursive merge is only for non-null, non-array objects on both sides; arrays are full replacement.
+
+## Task 6 - Workspace MD File Resolver + Copier (2026-03-01)
+
+### Patterns observed
+- `WORKSPACE_FILES` in `constants.ts` is `as const` tuple — spread with `[...WORKSPACE_FILES]` for mutable array
+- Bun test: `beforeEach`/`afterEach` with `mkdtemp` + `rm(dir, { recursive: true, force: true })` is the canonical temp dir pattern
+- `fs.access(filePath)` throws on missing file — safe way to check existence without TOCTOU
+- `fs.mkdir(destDir, { recursive: true })` silently handles already-existing dirs
+- For dynamic imports inside tests, `const { mkdir } = await import('node:fs/promises')` works fine in Bun
+
+### Config access pattern
+```typescript
+const agents = config.agents as Record<string, unknown> | undefined;
+const defaults = agents?.defaults as Record<string, unknown> | undefined;
+const workspace = defaults?.workspace as string | undefined;
+return workspace ?? path.join(stateDir, 'workspace');
+```
+Cast each level separately — avoids deep nested casting errors.
+
+### Test results
+17 tests pass, 0 fail across 22 expect() calls in 114ms
+
+## [2026-03-01] Task 8 Sensitive Fields Filter
+- Path-segment traversal with wildcard  matches sensitive patterns without regex usage.
+- Passing accumulated  during recursive descent is required for nested glob patterns like .
+- Deep-cloning arrays in filter output preserves non-mutation guarantees while still filtering object branches.
+
+## [2026-03-01] Task 8 Sensitive Fields Filter
+- Path-segment traversal with wildcard `*` matches sensitive patterns without regex usage.
+- Passing accumulated `keyPath` during recursive descent is required for nested glob patterns like `channels.*.token`.
+- Deep-cloning arrays in filter output preserves non-mutation guarantees while still filtering object branches.
+
+## [2026-03-01] Task 7 Backup Manager
+- `createBackup` must create `backupsDir` recursively before `copyFile` for first-run reliability.
+- ISO timestamp with `replace(/[:.]/g, '-')` produces filename-safe backup names while preserving sort order.
+- `listBackups` can sort backup filenames lexicographically and reverse to get newest-first ordering.
+- Byte-for-byte validation should use `Buffer` input/output in tests to guarantee binary-safe copy semantics.
