@@ -26,7 +26,7 @@ interface MigrationResult {
 export function migrateLegacyKeys(
   config: Record<string, unknown>
 ): MigrationResult {
-  const result: Record<string, unknown> = structuredClone(config);
+  let result: Record<string, unknown> = structuredClone(config);
   const applied: string[] = [];
 
   // identity → agents.list[].identity
@@ -58,7 +58,9 @@ export function migrateLegacyKeys(
 
     agents.list = list;
     result.agents = agents;
-    delete result.identity;
+    result = Object.fromEntries(
+      Object.entries(result).filter(([key]) => key !== 'identity')
+    );
   }
 
   return { config: result, applied };

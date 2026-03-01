@@ -13,6 +13,7 @@ import { deepMerge } from '../core/merge';
 import { loadPreset } from '../core/preset-loader';
 import { cloneToCache, isGitHubRef, parseGitHubRef } from '../core/remote';
 import { filterSensitiveFields } from '../core/sensitive-filter';
+import { copySkills } from '../core/skills';
 import type { PresetManifest } from '../core/types';
 import {
   copyWorkspaceFiles,
@@ -28,6 +29,11 @@ interface ApplyOptions {
   noBackup?: boolean;
 }
 
+interface ResolvedPreset {
+  preset: PresetManifest;
+  presetDir: string;
+}
+
 function resolveBuiltinPresetDir(presetName: string): string {
   const commandDir = path.dirname(fileURLToPath(import.meta.url));
   return path.join(commandDir, '..', 'presets', presetName);
@@ -37,78 +43,196 @@ function hasPresetConfig(preset: PresetManifest): boolean {
   return Boolean(preset.config && Object.keys(preset.config).length > 0);
 }
 
+async function resolvePreset(
+  presetName: string,
+  presetsDir: string,
+  force?: boolean
+): Promise<ResolvedPreset> {
+  if (isGitHubRef(presetName)) {
+    const { owner, repo } = parseGitHubRef(presetName);
+    const cachePath = await cloneToCache(owner, repo, presetsDir, { force });
+    console.log(pc.green(`Remote preset '${owner}/${repo}' ready.`));
+    return {
+      preset: await loadPreset(cachePath),
+      presetDir: cachePath,
+    };
+  }
+
+  const userPresetPath = path.join(presetsDir, presetName);
+  const userPreset = await loadPreset(userPresetPath)
+    .then((preset) => ({ preset, presetDir: userPresetPath }))
+    .catch(() => null);
+
+  if (userPreset) {
+    return userPreset;
+  }
+
+  const builtinPreset = (await getBuiltinPresets()).find(
+    (candidate) => candidate.name === presetName
+  );
+  if (!builtinPreset) {
+    throw new Error(
+      `Preset '${presetName}' not found. Run 'oh-my-openclaw list' to see available presets.`
+    );
+  }
+
+  return {
+    preset: builtinPreset,
+    presetDir: resolveBuiltinPresetDir(presetName),
+  };
+}
+
+async function loadCurrentConfig(configPath: string): Promise<{
+  config: Record<string, unknown>;
+  exists: boolean;
+}> {
+  try {
+    const snapshot = await readJson5(configPath);
+    return {
+      config: snapshot.parsed,
+      exists: true,
+    };
+  } catch {
+    return {
+      config: {},
+      exists: false,
+    };
+  }
+}
+
+async function unlinkIfExists(filePath: string): Promise<void> {
+  try {
+    await fs.unlink(filePath);
+  } catch (error) {
+    const err = error as NodeJS.ErrnoException;
+    if (err.code !== 'ENOENT') {
+      throw error;
+    }
+  }
+}
+
+async function backupWorkspaceIfNeeded(
+  workspaceDir: string,
+  backupsDir: string,
+  enabled: boolean
+): Promise<void> {
+  if (!enabled) {
+    return;
+  }
+
+  const existingWorkspaceFiles = await listWorkspaceFiles(workspaceDir);
+  if (existingWorkspaceFiles.length === 0) {
+    return;
+  }
+
+  const workspaceBackupPath = await createWorkspaceBackup(
+    workspaceDir,
+    backupsDir,
+    existingWorkspaceFiles
+  );
+  console.log(pc.dim(`Workspace backup created: ${workspaceBackupPath}`));
+}
+
+async function runCleanMode(
+  workspaceDir: string,
+  configPath: string,
+  backupsDir: string,
+  configExists: boolean,
+  noBackup: boolean
+): Promise<void> {
+  if (!noBackup && configExists) {
+    const backupPath = await createBackup(configPath, backupsDir);
+    console.log(pc.dim(`Backup created: ${backupPath}`));
+  }
+
+  await backupWorkspaceIfNeeded(workspaceDir, backupsDir, !noBackup);
+  await removeWorkspaceFiles(workspaceDir);
+  await unlinkIfExists(configPath);
+}
+
+async function runRegularBackupMode(
+  workspaceDir: string,
+  configPath: string,
+  backupsDir: string,
+  configExists: boolean,
+  noBackup: boolean,
+  hasWorkspaceFiles: boolean
+): Promise<void> {
+  if (!noBackup && configExists) {
+    const backupPath = await createBackup(configPath, backupsDir);
+    console.log(pc.dim(`Backup created: ${backupPath}`));
+  }
+
+  await backupWorkspaceIfNeeded(
+    workspaceDir,
+    backupsDir,
+    !noBackup && hasWorkspaceFiles
+  );
+}
+
+async function removeWorkspaceFiles(workspaceDir: string): Promise<void> {
+  for (const filename of WORKSPACE_FILES) {
+    await unlinkIfExists(path.join(workspaceDir, filename));
+  }
+}
+
+function buildMergedConfig(
+  currentConfig: Record<string, unknown>,
+  preset: PresetManifest
+): { applied: string[]; mergedConfig: Record<string, unknown> } {
+  if (!hasPresetConfig(preset)) {
+    return { applied: [], mergedConfig: currentConfig };
+  }
+
+  const filteredPresetConfig = filterSensitiveFields(
+    preset.config as Record<string, unknown>
+  );
+  const rawMerged = deepMerge(currentConfig, filteredPresetConfig);
+  const { config: mergedConfig, applied } = migrateLegacyKeys(rawMerged);
+  return { applied, mergedConfig };
+}
+
+function printDryRunInfo(preset: PresetManifest): void {
+  console.log(pc.bold(pc.yellow('DRY RUN - no files will be modified\n')));
+  console.log(`Preset: ${pc.bold(preset.name)} (${preset.description})`);
+  if (hasPresetConfig(preset)) {
+    console.log(
+      `Config changes: ${Object.keys(preset.config as Record<string, unknown>).length} top-level keys`
+    );
+  }
+  if (preset.workspaceFiles?.length) {
+    console.log(`Workspace files: ${preset.workspaceFiles.join(', ')}`);
+  }
+  if (preset.skills?.length) {
+    console.log(`Skills to install: ${preset.skills.join(', ')}`);
+  }
+  console.log(pc.dim('\nRun without --dry-run to apply.'));
+}
+
 export async function applyCommand(
   presetName: string,
   options: ApplyOptions = {}
 ): Promise<void> {
-  const paths = await resolveOpenClawPaths();
+  const paths = resolveOpenClawPaths();
+  const { preset, presetDir } = await resolvePreset(
+    presetName,
+    paths.presetsDir,
+    options.force
+  );
 
-  let preset: PresetManifest;
-  let presetDir: string;
-
-  if (isGitHubRef(presetName)) {
-    const { owner, repo } = parseGitHubRef(presetName);
-    const cachePath = await cloneToCache(owner, repo, paths.presetsDir, {
-      force: options.force,
-    });
-    preset = await loadPreset(cachePath);
-    presetDir = cachePath;
-    console.log(pc.green(`Remote preset '${owner}/${repo}' ready.`));
-  } else {
-    const userPresetPath = path.join(paths.presetsDir, presetName);
-    try {
-      preset = await loadPreset(userPresetPath);
-      presetDir = userPresetPath;
-    } catch {
-      const builtinPreset = (await getBuiltinPresets()).find(
-        (candidate) => candidate.name === presetName
-      );
-      if (!builtinPreset) {
-        throw new Error(
-          `Preset '${presetName}' not found. Run 'oh-my-openclaw list' to see available presets.`
-        );
-      }
-      preset = builtinPreset;
-      presetDir = resolveBuiltinPresetDir(presetName);
-    }
-  }
-
-  let currentConfig: Record<string, unknown> = {};
-  let configExists = false;
-  try {
-    const snapshot = await readJson5(paths.configPath);
-    currentConfig = snapshot.parsed;
-    configExists = true;
-  } catch {}
-
+  const configSnapshot = await loadCurrentConfig(paths.configPath);
+  let currentConfig = configSnapshot.config;
+  let configExists = configSnapshot.exists;
   const workspaceDir = resolveWorkspaceDir(currentConfig, paths.stateDir);
 
   if (options.clean && !options.dryRun) {
-    if (!options.noBackup && configExists) {
-      const backupPath = await createBackup(paths.configPath, paths.backupsDir);
-      console.log(pc.dim(`Backup created: ${backupPath}`));
-    }
-    if (!options.noBackup) {
-      const existingWorkspaceFiles = await listWorkspaceFiles(workspaceDir);
-      if (existingWorkspaceFiles.length > 0) {
-        const workspaceBackupPath = await createWorkspaceBackup(
-          workspaceDir,
-          paths.backupsDir,
-          existingWorkspaceFiles
-        );
-        console.log(pc.dim(`Workspace backup created: ${workspaceBackupPath}`));
-      }
-    }
-
-    for (const filename of WORKSPACE_FILES) {
-      try {
-        await fs.unlink(path.join(workspaceDir, filename));
-      } catch {}
-    }
-
-    try {
-      await fs.unlink(paths.configPath);
-    } catch {}
+    await runCleanMode(
+      workspaceDir,
+      paths.configPath,
+      paths.backupsDir,
+      configExists,
+      Boolean(options.noBackup)
+    );
 
     currentConfig = {};
     configExists = false;
@@ -117,54 +241,28 @@ export async function applyCommand(
     );
   }
 
-  let mergedConfig = currentConfig;
-  if (hasPresetConfig(preset)) {
-    const filteredPresetConfig = filterSensitiveFields(
-      preset.config as Record<string, unknown>
-    );
-    const rawMerged = deepMerge(currentConfig, filteredPresetConfig);
-    const { config: migrated, applied } = migrateLegacyKeys(rawMerged);
-    mergedConfig = migrated;
-    if (applied.length > 0) {
-      console.log(pc.dim(`Legacy key migration: ${applied.join(', ')}`));
-    }
+  const { applied, mergedConfig } = buildMergedConfig(currentConfig, preset);
+  if (applied.length > 0) {
+    console.log(pc.dim(`Legacy key migration: ${applied.join(', ')}`));
   }
 
   if (options.dryRun) {
-    console.log(pc.bold(pc.yellow('DRY RUN - no files will be modified\n')));
     if (options.clean) {
       console.log(pc.yellow('Mode: CLEAN INSTALL'));
     }
-    console.log(`Preset: ${pc.bold(preset.name)} (${preset.description})`);
-    if (hasPresetConfig(preset)) {
-      console.log(
-        `Config changes: ${Object.keys(preset.config as Record<string, unknown>).length} top-level keys`
-      );
-    }
-    if (preset.workspaceFiles?.length) {
-      console.log(`Workspace files: ${preset.workspaceFiles.join(', ')}`);
-    }
-    console.log(pc.dim('\nRun without --dry-run to apply.'));
+    printDryRunInfo(preset);
     return;
   }
 
   if (!options.clean) {
-    if (!options.noBackup && configExists) {
-      const backupPath = await createBackup(paths.configPath, paths.backupsDir);
-      console.log(pc.dim(`Backup created: ${backupPath}`));
-    }
-
-    if (!options.noBackup && preset.workspaceFiles?.length) {
-      const existingWorkspaceFiles = await listWorkspaceFiles(workspaceDir);
-      if (existingWorkspaceFiles.length > 0) {
-        const workspaceBackupPath = await createWorkspaceBackup(
-          workspaceDir,
-          paths.backupsDir,
-          existingWorkspaceFiles
-        );
-        console.log(pc.dim(`Workspace backup created: ${workspaceBackupPath}`));
-      }
-    }
+    await runRegularBackupMode(
+      workspaceDir,
+      paths.configPath,
+      paths.backupsDir,
+      configExists,
+      Boolean(options.noBackup),
+      Boolean(preset.workspaceFiles?.length)
+    );
   }
 
   if (hasPresetConfig(preset)) {
@@ -190,6 +288,15 @@ export async function applyCommand(
     console.log(
       pc.green(`OK Workspace files copied: ${preset.workspaceFiles.join(', ')}`)
     );
+  }
+
+  if (preset.skills?.length) {
+    const installed = await copySkills(presetDir, preset.skills, {
+      force: options.force,
+    });
+    if (installed.length > 0) {
+      console.log(pc.green(`OK Skills installed: ${installed.join(', ')}`));
+    }
   }
 
   console.log(pc.green(`\nOK Preset '${preset.name}' applied.`));

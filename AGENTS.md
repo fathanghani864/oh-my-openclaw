@@ -23,6 +23,7 @@ oh-my-openclaw/
 │   └── presets/             # Built-in preset templates
 │       ├── index.ts         # Loads + caches built-in presets
 │       └── apex/            # preset.json5 + workspace markdown files
+│           └── skills/      # bundled skill directories (e.g., prompt-guard/)
 ├── dist/                    # Build output (gitignored)
 └── .sisyphus/               # Build orchestration artifacts (internal)
 ```
@@ -38,6 +39,7 @@ oh-my-openclaw/
 | Apply remote GitHub presets | `src/core/remote.ts` | `isGitHubRef()`, `parseGitHubRef()`, `cloneToCache()` |
 | Add workspace file types | `src/core/constants.ts` | `WORKSPACE_FILES` array |
 | Add built-in presets | `src/presets/` | Built-in is apex-only; use user presets (`~/.openclaw/oh-my-openclaw/presets/<name>/`) for sharing custom variants |
+| Deploy skills from presets | `src/core/skills.ts` | `copySkills()` copies preset `skills/` dirs to `~/.agents/skills/` |
 | Understand backup flow | `src/core/backup.ts` | Timestamped copies to `~/.openclaw/oh-my-openclaw/backups/` |
 | Read/write JSON5 configs | `src/core/json5-utils.ts` | Wraps `json5` package with `ConfigSnapshot` type |
 
@@ -46,10 +48,10 @@ oh-my-openclaw/
 - **Runtime**: Bun only. `#!/usr/bin/env bun` shebang. Types via `bun-types`.
 - **Imports**: `node:` prefix for built-ins (`node:path`, `node:fs/promises`). Relative paths only — no aliases, no `baseUrl`.
 - **Import order**: Built-in > external (`commander`, `picocolors`, `json5`) > internal. Not enforced by linter.
-- **Style**: Single quotes, semicolons, 2-space indent. No formatter configured — follow existing files.
+- **Style**: Single quotes, semicolons, 2-space indent. Formatting/linting is enforced by Biome (`biome.jsonc`) with `ultracite/biome/core`.
 - **TypeScript**: `strict: true`, `target: ES2022`, `moduleResolution: bundler`.
 - **Config format**: JSON5 everywhere (not plain JSON). Use `readJson5`/`writeJson5` from `json5-utils.ts`.
-- **Error handling**: Empty `catch {}` blocks are intentional for optional file operations (preset scanning, backup listing). Named catches (`catch (err)`) re-throw selectively.
+- **Error handling**: Avoid empty `catch {}`. For optional file operations, handle expected errors explicitly (e.g., `ENOENT`) and re-throw unknown errors.
 - **Console output**: `picocolors` for colored terminal output. `pc.bold()`, `pc.green()`, `pc.yellow()`, `pc.dim()`, `pc.red()`.
 
 ## DEEP MERGE SEMANTICS (CRITICAL)
@@ -104,6 +106,9 @@ This repo manages exactly **ONE** built-in preset: **apex**.
 
 ```bash
 bun install              # Install deps
+bun run lint             # Biome check (ultracite rules)
+bun run lint:fix         # Biome auto-fix/format
+bun run check            # Lint + typecheck
 bun test                 # Run all tests
 bun run typecheck        # tsc --noEmit
 bun run build            # ESM bundle → dist/cli.js
@@ -116,7 +121,8 @@ bun run clean            # rm -rf dist
 - `src/presets/*/AGENTS.md` and `SOUL.md` are **preset content files** (agent personas copied to user workspace). They are NOT project documentation.
 - `bin/oh-my-openclaw.js` imports `src/cli.ts` directly — requires Bun runtime, does not use `dist/`.
 - `package.json` has no `bin`/`main`/`exports` fields. CLI distribution is via compiled binary only.
-- No CI/CD pipeline (no `.github/workflows`). Validation was done via `.sisyphus/evidence/` artifacts.
+- CI workflow exists at `.github/workflows/code-quality.yml` and runs Biome, typecheck, test, and build on PR/push.
 - `build:compile` uses Bun's `--compile --bytecode` for single-file native binary.
 - Target filesystem: `~/.openclaw/` (config, workspace, presets, backups). After applying, user must manually run `openclaw gateway restart`.
 - Project policy: There are currently no real end users. For this machine-local environment, aggressive migrations and breaking updates are acceptable to eliminate legacy quickly.
+- Skills bundled in presets (`src/presets/<name>/skills/<skill-name>/`) are copied to `~/.agents/skills/<skill-name>/` when `apply` runs. Use `--force` to overwrite existing skills.

@@ -45,7 +45,9 @@ describe('listCommand', () => {
     expect(combined).toContain('apex');
     expect(combined).toContain('[builtin]');
 
-    const nameLines = output.filter((line) => BUILTIN_NAME_LINE_PATTERN.test(line));
+    const nameLines = output.filter((line) =>
+      BUILTIN_NAME_LINE_PATTERN.test(line)
+    );
     expect(nameLines.length).toBe(1);
 
     const versionLines = output.filter((line) =>

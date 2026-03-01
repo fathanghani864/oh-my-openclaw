@@ -44,17 +44,22 @@ describe('apex preset', () => {
     expect(preset.description.toLowerCase()).toMatch(APEX_DESCRIPTION_PATTERN);
   });
 
-  test('includes exactly five workspace files in expected order', async () => {
+  test('includes exactly four workspace files in expected order', async () => {
     const preset = await loadPreset(path.join(__dirname, '..', 'apex'));
 
     expect(preset.workspaceFiles).toEqual([
       'AGENTS.md',
       'SOUL.md',
-      'TOOLS.md',
       'USER.md',
       'IDENTITY.md',
     ]);
-    expect(preset.workspaceFiles).toHaveLength(5);
+    expect(preset.workspaceFiles).toHaveLength(4);
+  });
+
+  test('includes required skills', async () => {
+    const preset = await loadPreset(path.join(__dirname, '..', 'apex'));
+
+    expect(preset.skills).toEqual(['prompt-guard', 'tmux-opencode']);
   });
 
   test('includes required config sections', async () => {

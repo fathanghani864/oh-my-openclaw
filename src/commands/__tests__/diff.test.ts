@@ -153,11 +153,8 @@ describe('diffCommand', () => {
       workspaceFiles: { toAdd: string[]; toReplace: string[] };
     };
 
-    // apex preset has 5 workspace files
-    // Since workspace dir is empty, all should be in toAdd
     expect(parsed.workspaceFiles.toAdd).toContain('AGENTS.md');
     expect(parsed.workspaceFiles.toAdd).toContain('SOUL.md');
-    expect(parsed.workspaceFiles.toAdd).toContain('TOOLS.md');
     expect(parsed.workspaceFiles.toAdd).toContain('USER.md');
     expect(parsed.workspaceFiles.toAdd).toContain('IDENTITY.md');
   });

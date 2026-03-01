@@ -4,6 +4,7 @@ export interface PresetManifest {
   config?: Record<string, unknown>;
   description: string;
   name: string;
+  skills?: string[];
   tags?: string[];
   version: string;
   workspaceFiles?: string[];

@@ -134,12 +134,12 @@ export async function cloneToCache(
       `Failed to clone '${owner}/${repo}'. Ensure the repository exists and is public.`
     );
   } finally {
-    await fs.rm(tmpDir, { recursive: true, force: true }).catch(
-      (error: unknown) => {
+    await fs
+      .rm(tmpDir, { recursive: true, force: true })
+      .catch((error: unknown) => {
         if (!(error instanceof Error)) {
           return;
         }
-      }
-    );
+      });
   }
 }

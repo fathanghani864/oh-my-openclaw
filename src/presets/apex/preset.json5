@@ -52,5 +52,6 @@
       },
     },
   },
-  workspaceFiles: ['AGENTS.md', 'SOUL.md', 'TOOLS.md', 'USER.md', 'IDENTITY.md'],
+  workspaceFiles: ['AGENTS.md', 'SOUL.md', 'USER.md', 'IDENTITY.md'],
+  skills: ['prompt-guard', 'tmux-opencode'],
 }

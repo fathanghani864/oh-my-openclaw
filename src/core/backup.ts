@@ -27,6 +27,7 @@ export async function createWorkspaceBackup(
     const dest = path.join(backupSubDir, filename);
 
     try {
+      await fs.mkdir(path.dirname(dest), { recursive: true });
       await fs.copyFile(src, dest);
     } catch (error) {
       const err = error as NodeJS.ErrnoException;

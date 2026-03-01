@@ -2,6 +2,9 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { WORKSPACE_FILES } from './constants';
 
+const SKILLS_DIRNAME = 'skills';
+const SKILL_ENTRY_FILENAME = 'SKILL.md';
+
 // Reads agents.defaults.workspace from parsed config, falls back to {stateDir}/workspace
 export function resolveWorkspaceDir(
   config: Record<string, unknown>,
@@ -30,6 +33,47 @@ export async function listWorkspaceFiles(
   return existing;
 }
 
+// Returns list of existing skill directory names from {rootDir}/skills/*/SKILL.md
+export async function listWorkspaceSkills(rootDir: string): Promise<string[]> {
+  const skillsDir = path.join(rootDir, SKILLS_DIRNAME);
+  let entries: Array<{ isDirectory: () => boolean; name: string }>;
+
+  try {
+    entries = await fs.readdir(skillsDir, { withFileTypes: true });
+  } catch {
+    return [];
+  }
+
+  const existing: string[] = [];
+  for (const entry of entries) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
+
+    const skillEntry = path.join(skillsDir, entry.name, SKILL_ENTRY_FILENAME);
+    const hasSkillEntry = await fs
+      .access(skillEntry)
+      .then(() => true)
+      .catch(() => false);
+
+    if (hasSkillEntry) {
+      existing.push(entry.name);
+    }
+  }
+
+  return existing.sort();
+}
+
+// Returns existing skill entry file paths relative to workspace root
+export async function listWorkspaceSkillFiles(
+  workspaceDir: string
+): Promise<string[]> {
+  const skills = await listWorkspaceSkills(workspaceDir);
+  return skills.map((skillName) =>
+    path.join(SKILLS_DIRNAME, skillName, SKILL_ENTRY_FILENAME)
+  );
+}
+
 // Copies specified MD files from src to dest directory
 export async function copyWorkspaceFiles(
   srcDir: string,
@@ -44,6 +88,31 @@ export async function copyWorkspaceFiles(
   }
 }
 
+export async function copyWorkspaceSkills(
+  srcRootDir: string,
+  destRootDir: string,
+  skills: string[]
+): Promise<void> {
+  if (skills.length === 0) {
+    return;
+  }
+
+  const srcSkillsDir = path.join(srcRootDir, SKILLS_DIRNAME);
+  const destSkillsDir = path.join(destRootDir, SKILLS_DIRNAME);
+  await fs.mkdir(destSkillsDir, { recursive: true });
+
+  for (const skillName of skills) {
+    await fs.cp(
+      path.join(srcSkillsDir, skillName),
+      path.join(destSkillsDir, skillName),
+      {
+        recursive: true,
+        force: true,
+      }
+    );
+  }
+}
+
 // Copies current workspace MD files into preset directory, returns list of copied files
 export async function exportWorkspaceFiles(
   workspaceDir: string,
@@ -54,4 +123,16 @@ export async function exportWorkspaceFiles(
     await copyWorkspaceFiles(workspaceDir, presetDir, existingFiles);
   }
   return existingFiles;
+}
+
+export async function exportWorkspaceSkills(
+  workspaceDir: string,
+  presetDir: string
+): Promise<string[]> {
+  const existingSkills = await listWorkspaceSkills(workspaceDir);
+  if (existingSkills.length > 0) {
+    await copyWorkspaceSkills(workspaceDir, presetDir, existingSkills);
+  }
+
+  return existingSkills;
 }
