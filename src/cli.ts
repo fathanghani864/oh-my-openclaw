@@ -8,6 +8,7 @@ import { applyCommand } from './commands/apply';
 import { diffCommand } from './commands/diff';
 import { exportCommand } from './commands/export';
 import { listCommand } from './commands/list';
+import { uploadCommand } from './commands/upload';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
@@ -137,6 +138,37 @@ program
           dryRun: options.dryRun,
           noBackup: !options.backup,
           clean: options.clean,
+        });
+      } catch (err) {
+        console.error(
+          `Error: ${err instanceof Error ? err.message : String(err)}`
+        );
+        process.exit(1);
+      }
+    }
+  );
+
+program
+  .command('upload')
+  .description('Upload workspace files to a GitHub repo as a preset')
+  .argument('<github-repo>', 'GitHub repository (e.g., owner/repo)')
+  .option('--create', 'Create the repository if it does not exist')
+  .option('--private', 'Make the repository private (used with --create)')
+  .option('--description <desc>', 'Repository description (used with --create)')
+  .action(
+    async (
+      githubRepo: string,
+      options: {
+        create?: boolean;
+        private?: boolean;
+        description?: string;
+      }
+    ) => {
+      try {
+        await uploadCommand(githubRepo, {
+          create: options.create,
+          private: options.private,
+          description: options.description,
         });
       } catch (err) {
         console.error(
