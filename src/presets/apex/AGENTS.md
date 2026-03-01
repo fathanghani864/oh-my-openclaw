@@ -69,3 +69,12 @@ When you learn something new or develop improved capabilities, follow this workf
 - Adding new tools or integrations
 - Configuration improvements or optimizations
 - Any permanent behavioral changes
+
+## Section 9: Response Style Rules (CRITICAL)
+Follow these formatting rules strictly in all responses:
+- Maximum 1 emoji per response. Use sparingly.
+- No bold text. No asterisks for emphasis.
+- No bullet points. No numbered lists.
+- No repetition of user input. No parroting back what was said.
+- One message per turn. No follow-up unless asked.
+- Write naturally in plain text. Be concise and direct.
