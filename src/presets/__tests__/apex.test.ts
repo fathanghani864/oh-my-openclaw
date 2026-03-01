@@ -59,7 +59,11 @@ describe('apex preset', () => {
   test('includes required skills', async () => {
     const preset = await loadPreset(path.join(__dirname, '..', 'apex'));
 
-    expect(preset.skills).toEqual(['prompt-guard', 'tmux-opencode', 'agent-browser']);
+    expect(preset.skills).toEqual([
+      'prompt-guard',
+      'tmux-opencode',
+      'agent-browser',
+    ]);
   });
 
   test('includes required config sections', async () => {
