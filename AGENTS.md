@@ -23,6 +23,7 @@ oh-my-openclaw/
 │   └── presets/             # Built-in preset templates
 │       ├── index.ts         # Loads + caches built-in presets
 │       └── apex/            # preset.json5 + workspace markdown files
+│           └── skills/      # bundled skill directories (e.g., prompt-guard/)
 ├── dist/                    # Build output (gitignored)
 └── .sisyphus/               # Build orchestration artifacts (internal)
 ```
@@ -38,6 +39,7 @@ oh-my-openclaw/
 | Apply remote GitHub presets | `src/core/remote.ts` | `isGitHubRef()`, `parseGitHubRef()`, `cloneToCache()` |
 | Add workspace file types | `src/core/constants.ts` | `WORKSPACE_FILES` array |
 | Add built-in presets | `src/presets/` | Built-in is apex-only; use user presets (`~/.openclaw/oh-my-openclaw/presets/<name>/`) for sharing custom variants |
+| Deploy skills from presets | `src/core/skills.ts` | `copySkills()` copies preset `skills/` dirs to `~/.agents/skills/` |
 | Understand backup flow | `src/core/backup.ts` | Timestamped copies to `~/.openclaw/oh-my-openclaw/backups/` |
 | Read/write JSON5 configs | `src/core/json5-utils.ts` | Wraps `json5` package with `ConfigSnapshot` type |
 
@@ -119,3 +121,4 @@ bun run clean            # rm -rf dist
 - No CI/CD pipeline (no `.github/workflows`). Validation was done via `.sisyphus/evidence/` artifacts.
 - `build:compile` uses Bun's `--compile --bytecode` for single-file native binary.
 - Target filesystem: `~/.openclaw/` (config, workspace, presets, backups). After applying, user must manually run `openclaw gateway restart`.
+- Skills bundled in presets (`src/presets/<name>/skills/<skill-name>/`) are copied to `~/.agents/skills/<skill-name>/` when `apply` runs. Use `--force` to overwrite existing skills.

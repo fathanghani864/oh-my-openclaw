@@ -46,7 +46,7 @@ Available presets:
 ```
 
 ### apply
-Applies a preset to your OpenClaw configuration. It merges the preset's JSON config into your `openclaw.json` and copies any bundled workspace files (like `AGENTS.md`) to your `.openclaw` directory. The `<preset>` argument can be a local preset name, a GitHub shorthand (`owner/repo`), or a full GitHub URL (`https://github.com/owner/repo`).
+Applies a preset to your OpenClaw configuration. It merges the preset's JSON config into your `openclaw.json`, copies any bundled workspace files (like `AGENTS.md`) to your `.openclaw` directory, and installs any bundled skills to `~/.agents/skills/`. The `<preset>` argument can be a local preset name, a GitHub shorthand (`owner/repo`), or a full GitHub URL (`https://github.com/owner/repo`).
 ```bash
 oh-my-openclaw apply <preset> [options]
 ```
@@ -151,6 +151,32 @@ oh-my-openclaw apply minpeter/demo-researcher --force
 Remote presets are automatically cached as user presets at `~/.openclaw/oh-my-openclaw/presets/owner--repo/`. Subsequent applies reuse the cached version unless `--force` is specified.
 
 > **Note**: Only public GitHub repositories are supported. Private repos require authentication which is not currently supported.
+
+## Skills in Presets
+
+Presets can bundle OpenClaw agent skills. When you apply a preset, any skills listed in its `skills` field are automatically copied to `~/.agents/skills/`, making them available to `openclaw skills list`.
+
+### Collision Handling
+
+If a skill already exists at the target location:
+- **Interactive (TTY)**: You will be prompted to confirm overwrite (`[y/N]`).
+- **Non-interactive (non-TTY / CI)**: The existing skill is skipped with a warning.
+- **`--force` flag**: Overwrites existing skills without prompting.
+
+### Preset Format with Skills
+
+```json5
+{
+  name: "my-preset",
+  description: "My preset with skills",
+  version: "1.0.0",
+  skills: ["my-skill"],  // skill directory names under skills/
+  config: { ... },
+  workspaceFiles: ["AGENTS.md"]
+}
+```
+
+Skills are stored in the preset's `skills/<name>/` directory and must contain a `SKILL.md` file.
 
 ## Development
 - **Prerequisites:** Bun
