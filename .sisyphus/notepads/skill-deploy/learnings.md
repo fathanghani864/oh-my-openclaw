@@ -52,3 +52,24 @@
 - `PresetManifest` now includes optional `skills?: string[]` directly after `workspaceFiles?: string[]` in `src/core/types.ts`.
 - Built-in apex preset manifest (`src/presets/apex/preset.json5`) now declares `skills: ['prompt-guard']` after `workspaceFiles`.
 - Typecheck evidence path for this task: `.sisyphus/evidence/task-2-type-check.txt`.
+
+## Task 5: skills.test.ts unit tests (2026-03-01)
+
+### os.homedir() vs process.env.HOME on macOS
+- `os.homedir()` reads from system user database — ignores `process.env.HOME`
+- Integration tests that set `process.env.HOME = fakeHome` expect the target to change
+- Fix: use `process.env.HOME ?? os.homedir()` for the home fallback in `skills.ts`
+- This fixes both test isolation AND the 3 pre-existing apply.test.ts failures
+
+### Test isolation for filesystem writes
+- Added `targetBaseDir?: string` to `CopySkillsOptions` — explicit override wins over env-derived default
+- Unit tests always pass explicit `targetBaseDir` (temp dir) — never touches real `~/.agents/skills/`
+- Integration/apply tests use `process.env.HOME = fakeHome` approach instead
+
+### bun test non-TTY behavior
+- `process.stdin.isTTY` is `false` in `bun test` — no mocking needed to test non-TTY paths
+- `promptOverwrite` returns `Promise.resolve(false)` immediately, testable without any stubs
+
+### captureLogs pattern
+- Monkey-patch `console.log` before `await run()`, restore in `finally`
+- Used to assert on output messages like "Skipped skill ..." or "Would install skill ..."
