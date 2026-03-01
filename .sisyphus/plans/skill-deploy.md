@@ -65,11 +65,11 @@ Enable oh-my-openclaw presets to bundle and deploy OpenClaw agent skills, with t
 - Updated `AGENTS.md` and `README.md`
 
 ### Definition of Done
-- [ ] `bun test` — all tests pass (0 failures)
-- [ ] `bun run typecheck` — no type errors
-- [ ] `bun run build` — builds successfully
-- [ ] `bun run src/cli.ts apply apex --dry-run` — shows skills to install
-- [ ] `openclaw skills list` shows prompt-guard after `apply apex`
+- [x] `bun test` — all tests pass (0 failures)
+- [x] `bun run typecheck` — no type errors
+- [x] `bun run build` — builds successfully
+- [x] `bun run src/cli.ts apply apex --dry-run` — shows skills to install
+- [x] `openclaw skills list` shows prompt-guard after `apply apex`
 
 ### Must Have
 - `preset.json5` supports `skills` field (string array of skill dir names)
@@ -173,7 +173,7 @@ Max Concurrent: 3 (Wave 1)
 > Implementation + Test = ONE Task. Never separate.
 > EVERY task MUST have: Recommended Agent Profile + Parallelization info + QA Scenarios.
 
-- [ ] 1. Create `src/core/skills.ts` — Skill Copy Logic with Collision Handling
+- [x] 1. Create `src/core/skills.ts` — Skill Copy Logic with Collision Handling
 
   **What to do**:
   - Create `src/core/skills.ts` with these exports:
@@ -218,9 +218,9 @@ Max Concurrent: 3 (Wave 1)
   - `remote.ts` — Shows error handling pattern with user-friendly messages. Skill copy errors should follow the same style.
 
   **Acceptance Criteria**:
-  - [ ] File exists: `src/core/skills.ts`
-  - [ ] `bun run typecheck` — no type errors
-  - [ ] Exports `copySkills` and `promptOverwrite`
+  - [x] File exists: `src/core/skills.ts`
+  - [x] `bun run typecheck` — no type errors
+  - [x] Exports `copySkills` and `promptOverwrite`
 
   **QA Scenarios (MANDATORY):**
 
@@ -253,7 +253,7 @@ Max Concurrent: 3 (Wave 1)
 
 ---
 
-- [ ] 2. Update PresetManifest Type + Apex `preset.json5`
+- [x] 2. Update PresetManifest Type + Apex `preset.json5`
 
   **What to do**:
   - In `src/core/types.ts`, add `skills?: string[]` to `PresetManifest` interface (after `workspaceFiles` field, line 9).
@@ -281,9 +281,9 @@ Max Concurrent: 3 (Wave 1)
   - `src/core/__tests__/types.test.ts` — May have a test validating PresetManifest fields. Update if needed.
 
   **Acceptance Criteria**:
-  - [ ] `PresetManifest` has `skills?: string[]` field
-  - [ ] `preset.json5` has `skills: ['prompt-guard']`
-  - [ ] `bun run typecheck` — no type errors
+  - [x] `PresetManifest` has `skills?: string[]` field
+  - [x] `preset.json5` has `skills: ['prompt-guard']`
+  - [x] `bun run typecheck` — no type errors
 
   **QA Scenarios (MANDATORY):**
 
@@ -304,7 +304,7 @@ Max Concurrent: 3 (Wave 1)
 
 ---
 
-- [ ] 3. Create `src/presets/apex/skills/prompt-guard/SKILL.md`
+- [x] 3. Create `src/presets/apex/skills/prompt-guard/SKILL.md`
 
   **What to do**:
   - Create directory: `src/presets/apex/skills/prompt-guard/`
@@ -342,10 +342,10 @@ Max Concurrent: 3 (Wave 1)
   - `~/.agents/skills/ralph-tui-prd/SKILL.md` — Example of user SKILL.md. Simpler frontmatter format.
 
   **Acceptance Criteria**:
-  - [ ] File exists: `src/presets/apex/skills/prompt-guard/SKILL.md`
-  - [ ] Has valid YAML frontmatter with `name: prompt-guard`
-  - [ ] Content is agent-oriented (When to Use, Quick Start sections)
-  - [ ] Under 200 lines
+  - [x] File exists: `src/presets/apex/skills/prompt-guard/SKILL.md`
+  - [x] Has valid YAML frontmatter with `name: prompt-guard`
+  - [x] Content is agent-oriented (When to Use, Quick Start sections)
+  - [x] Under 200 lines
 
   **QA Scenarios (MANDATORY):**
 
@@ -371,24 +371,24 @@ Max Concurrent: 3 (Wave 1)
 
 > 4 review agents run in PARALLEL. ALL must APPROVE. Rejection → fix → re-run.
 
-- [ ] F1. **Plan Compliance Audit** — `oracle`
+- [x] F1. **Plan Compliance Audit** — `oracle`
   Read the plan end-to-end. For each "Must Have": verify implementation exists. For each "Must NOT Have": search codebase for forbidden patterns. Check evidence files.
   Output: `Must Have [N/N] | Must NOT Have [N/N] | Tasks [N/N] | VERDICT: APPROVE/REJECT`
 
-- [ ] F2. **Code Quality Review** — `unspecified-high`
+- [x] F2. **Code Quality Review** — `unspecified-high`
   Run `bun run typecheck` + `bun test`. Review changed files for `as any`, empty catches, unused imports, AI slop.
   Output: `Build [PASS/FAIL] | Tests [N pass/N fail] | Files [N clean/N issues] | VERDICT`
 
-- [ ] F3. **Real Manual QA** — `unspecified-high`
+- [x] F3. **Real Manual QA** — `unspecified-high`
   Execute real CLI: apply apex (with skills), verify prompt-guard in ~/.agents/skills/, run openclaw skills list, test --dry-run, test --force, test collision prompt.
   Output: `Scenarios [N/N pass] | VERDICT`
 
-- [ ] F4. **Scope Fidelity Check** — `deep`
+- [x] F4. **Scope Fidelity Check** — `deep`
   Diff all changes vs plan. Verify forbidden files untouched. Check scope creep.
   Output: `Tasks [N/N compliant] | Contamination [CLEAN/N issues] | VERDICT`
 
 
-- [ ] 4. Integrate Skill Deployment into `apply.ts`
+- [x] 4. Integrate Skill Deployment into `apply.ts`
 
   **What to do**:
   - Import `{ copySkills }` from `'../core/skills'` in `src/commands/apply.ts`.
@@ -434,11 +434,11 @@ Max Concurrent: 3 (Wave 1)
   - `src/commands/install.ts` — Calls `applyCommand('apex', ...)`. No changes needed here — it inherits skill behavior.
 
   **Acceptance Criteria**:
-  - [ ] `bun run typecheck` — no type errors
-  - [ ] `bun test` — all existing tests still pass
-  - [ ] `import copySkills` present in apply.ts
-  - [ ] Dry-run output includes skills info
-  - [ ] Existing local/remote preset flow unchanged
+  - [x] `bun run typecheck` — no type errors
+  - [x] `bun test` — all existing tests still pass
+  - [x] `import copySkills` present in apply.ts
+  - [x] Dry-run output includes skills info
+  - [x] Existing local/remote preset flow unchanged
 
   **QA Scenarios (MANDATORY):**
 
@@ -467,7 +467,7 @@ Max Concurrent: 3 (Wave 1)
 
 ---
 
-- [ ] 5. Add Unit Tests for `src/core/skills.ts`
+- [x] 5. Add Unit Tests for `src/core/skills.ts`
 
   **What to do**:
   - Create `src/core/__tests__/skills.test.ts`
@@ -506,9 +506,9 @@ Max Concurrent: 3 (Wave 1)
   - `src/core/skills.ts` — (Task 1) Functions to test.
 
   **Acceptance Criteria**:
-  - [ ] File exists: `src/core/__tests__/skills.test.ts`
-  - [ ] `bun test src/core/__tests__/skills.test.ts` — all tests pass
-  - [ ] At least 8 test cases
+  - [x] File exists: `src/core/__tests__/skills.test.ts`
+  - [x] `bun test src/core/__tests__/skills.test.ts` — all tests pass
+  - [x] At least 8 test cases
 
   **QA Scenarios (MANDATORY):**
 
@@ -529,7 +529,7 @@ Max Concurrent: 3 (Wave 1)
 
 ---
 
-- [ ] 6. Add Integration Tests for Skill Deployment via Apply
+- [x] 6. Add Integration Tests for Skill Deployment via Apply
 
   **What to do**:
   - In `src/commands/__tests__/apply.test.ts`, add `describe('skill deployment')` block at the end.
@@ -560,8 +560,8 @@ Max Concurrent: 3 (Wave 1)
   - `src/commands/apply.ts` — (Task 4) Updated apply flow with skill deployment.
 
   **Acceptance Criteria**:
-  - [ ] `bun test src/commands/__tests__/apply.test.ts` — all pass (old + new)
-  - [ ] At least 5 new tests in `describe('skill deployment')`
+  - [x] `bun test src/commands/__tests__/apply.test.ts` — all pass (old + new)
+  - [x] At least 5 new tests in `describe('skill deployment')`
 
   **QA Scenarios (MANDATORY):**
 
@@ -582,7 +582,7 @@ Max Concurrent: 3 (Wave 1)
 
 ---
 
-- [ ] 7. Update AGENTS.md
+- [x] 7. Update AGENTS.md
 
   **What to do**:
   - Update STRUCTURE section: add `skills/` directory under `src/presets/apex/`
@@ -599,8 +599,8 @@ Max Concurrent: 3 (Wave 1)
   **References**: `AGENTS.md` (full file)
 
   **Acceptance Criteria**:
-  - [ ] AGENTS.md mentions skills.ts and skill deployment
-  - [ ] AGENTS.md mentions ~/.agents/skills/ target path
+  - [x] AGENTS.md mentions skills.ts and skill deployment
+  - [x] AGENTS.md mentions ~/.agents/skills/ target path
 
   **QA Scenarios:**
   ```
@@ -617,7 +617,7 @@ Max Concurrent: 3 (Wave 1)
 
 ---
 
-- [ ] 8. Update README.md
+- [x] 8. Update README.md
 
   **What to do**:
   - Update apply command description: mention skill deployment
@@ -633,8 +633,8 @@ Max Concurrent: 3 (Wave 1)
   **References**: `README.md` (full file)
 
   **Acceptance Criteria**:
-  - [ ] README.md documents skill deployment feature
-  - [ ] README.md mentions collision handling
+  - [x] README.md documents skill deployment feature
+  - [x] README.md mentions collision handling
 
   **QA Scenarios:**
   ```
@@ -676,17 +676,17 @@ bun run src/cli.ts apply apex --dry-run  # Expected: shows skills to install
 ```
 
 ### Final Checklist
-- [ ] `src/core/skills.ts` exists with `copySkills` function
-- [ ] `PresetManifest` has `skills?: string[]` field
-- [ ] `src/commands/apply.ts` calls skill copy after workspace files
-- [ ] `src/presets/apex/skills/prompt-guard/SKILL.md` exists with agent-oriented content
-- [ ] `src/presets/apex/preset.json5` has `skills: ['prompt-guard']`
-- [ ] Interactive prompt on skill collision (skips in non-TTY)
-- [ ] `--force` overwrites skills without prompt
-- [ ] `--dry-run` shows skills that would be installed
-- [ ] `install` command inherits skill behavior from apply
-- [ ] All existing tests still pass
-- [ ] No new npm dependencies
-- [ ] `src/core/workspace.ts` NOT modified
-- [ ] `src/core/merge.ts` NOT modified
-- [ ] `src/core/remote.ts` NOT modified
+- [x] `src/core/skills.ts` exists with `copySkills` function
+- [x] `PresetManifest` has `skills?: string[]` field
+- [x] `src/commands/apply.ts` calls skill copy after workspace files
+- [x] `src/presets/apex/skills/prompt-guard/SKILL.md` exists with agent-oriented content
+- [x] `src/presets/apex/preset.json5` has `skills: ['prompt-guard']`
+- [x] Interactive prompt on skill collision (skips in non-TTY)
+- [x] `--force` overwrites skills without prompt
+- [x] `--dry-run` shows skills that would be installed
+- [x] `install` command inherits skill behavior from apply
+- [x] All existing tests still pass
+- [x] No new npm dependencies
+- [x] `src/core/workspace.ts` NOT modified
+- [x] `src/core/merge.ts` NOT modified
+- [x] `src/core/remote.ts` NOT modified
