@@ -564,52 +564,60 @@ async function writeUserPresetWithSkills(
 }
 
 describe('skill deployment', () => {
+  // Skills install to os.homedir()/.agents/skills/ — Bun compiles native calls so
+  // homedir() can't be redirected. We use unique names + afterEach cleanup instead.
+  const installedSkillNames: string[] = [];
+  const skillsBaseDir = path.join(os.homedir(), '.agents', 'skills');
+  let skillCounter = 0;
+
+  function uniqueSkillName(prefix: string): string {
+    skillCounter++;
+    return `${prefix}-${Date.now()}-${skillCounter}`;
+  }
+
+  afterEach(async () => {
+    for (const name of installedSkillNames.splice(0)) {
+      await fs.rm(path.join(skillsBaseDir, name), { recursive: true, force: true });
+    }
+  });
 
   test('apply copies skills to target directory', async () => {
     const env = await createTempEnv('openclaw-skill-copy-');
     await writeConfig(env.configPath, { identity: { name: 'SkillBot' } });
 
+    const skillName = uniqueSkillName('skill-copy');
+    installedSkillNames.push(skillName);
+
     await writeUserPresetWithSkills(
       env.presetsDir,
       'skill-preset',
-      {
-        name: 'skill-preset',
-        description: 'Skill deployment test',
-        version: '1.0.0',
-        skills: ['test-skill'],
-      },
-      {
-        'test-skill': { 'SKILL.md': '# Test Skill\nThis is a test skill.' },
-      },
+      { name: 'skill-preset', description: 'Skill deployment test', version: '1.0.0', skills: [skillName] },
+      { [skillName]: { 'SKILL.md': '# Test Skill\nThis is a test skill.' } },
     );
 
-    const fakeHome = await fs.mkdtemp(path.join(os.tmpdir(), 'fake-home-'));
-    tempDirs.push(fakeHome);
-    process.env.HOME = fakeHome;
-    await applyCommand('skill-preset', { noBackup: true });
+    const logs = await captureLogs(async () => {
+      await applyCommand('skill-preset', { noBackup: true });
+    });
 
-    const skillFile = path.join(fakeHome, '.agents', 'skills', 'test-skill', 'SKILL.md');
+    const skillFile = path.join(skillsBaseDir, skillName, 'SKILL.md');
     expect(await fileExists(skillFile)).toBe(true);
     const content = await fs.readFile(skillFile, 'utf-8');
     expect(content).toBe('# Test Skill\nThis is a test skill.');
+    expect(logs.join('\n')).toContain(`OK Skills installed: ${skillName}`);
   });
 
   test('apply shows skills in dry-run output', async () => {
     const env = await createTempEnv('openclaw-skill-dryrun-');
     await writeConfig(env.configPath, { identity: { name: 'DryRunSkillBot' } });
 
+    const skillName = uniqueSkillName('skill-dryrun');
+    // No push to installedSkillNames — dry-run won't install
+
     await writeUserPresetWithSkills(
       env.presetsDir,
       'skill-dryrun-preset',
-      {
-        name: 'skill-dryrun-preset',
-        description: 'Skill dry-run test',
-        version: '1.0.0',
-        skills: ['demo-skill'],
-      },
-      {
-        'demo-skill': { 'SKILL.md': '# Demo Skill' },
-      },
+      { name: 'skill-dryrun-preset', description: 'Skill dry-run test', version: '1.0.0', skills: [skillName] },
+      { [skillName]: { 'SKILL.md': '# Demo Skill' } },
     );
 
     const logs = await captureLogs(async () => {
@@ -619,64 +627,52 @@ describe('skill deployment', () => {
     const combined = logs.join('\n');
     expect(combined).toContain('Skills to install');
     expect(combined).toContain('DRY RUN');
+    expect(await fileExists(path.join(skillsBaseDir, skillName, 'SKILL.md'))).toBe(false);
   });
 
   test('apply with --force overwrites existing skills', async () => {
     const env = await createTempEnv('openclaw-skill-force-');
     await writeConfig(env.configPath, { identity: { name: 'ForceSkillBot' } });
 
-    const fakeHome = await fs.mkdtemp(path.join(os.tmpdir(), 'fake-home-'));
-    tempDirs.push(fakeHome);
-    process.env.HOME = fakeHome;
+    const skillName = uniqueSkillName('skill-force');
+    installedSkillNames.push(skillName);
 
-    const skillDir = path.join(fakeHome, '.agents', 'skills', 'existing-skill');
+    const skillDir = path.join(skillsBaseDir, skillName);
     await fs.mkdir(skillDir, { recursive: true });
     await fs.writeFile(path.join(skillDir, 'SKILL.md'), '# Old Content', 'utf-8');
 
     await writeUserPresetWithSkills(
       env.presetsDir,
       'force-skill-preset',
-      {
-        name: 'force-skill-preset',
-        description: 'Force skill overwrite test',
-        version: '1.0.0',
-        skills: ['existing-skill'],
-      },
-      {
-        'existing-skill': { 'SKILL.md': '# New Content' },
-      },
+      { name: 'force-skill-preset', description: 'Force skill overwrite test', version: '1.0.0', skills: [skillName] },
+      { [skillName]: { 'SKILL.md': '# New Content' } },
     );
 
-    await applyCommand('force-skill-preset', { noBackup: true, force: true });
+    const logs = await captureLogs(async () => {
+      await applyCommand('force-skill-preset', { noBackup: true, force: true });
+    });
 
     const content = await fs.readFile(path.join(skillDir, 'SKILL.md'), 'utf-8');
     expect(content).toBe('# New Content');
+    expect(logs.join('\n')).toContain(`OK Skill '${skillName}' installed.`);
   });
 
   test('apply skips existing skills without force in non-TTY', async () => {
     const env = await createTempEnv('openclaw-skill-skip-');
     await writeConfig(env.configPath, { identity: { name: 'SkipSkillBot' } });
 
-    const fakeHome = await fs.mkdtemp(path.join(os.tmpdir(), 'fake-home-'));
-    tempDirs.push(fakeHome);
-    process.env.HOME = fakeHome;
+    const skillName = uniqueSkillName('skill-skip');
+    installedSkillNames.push(skillName);
 
-    const skillDir = path.join(fakeHome, '.agents', 'skills', 'skip-skill');
+    const skillDir = path.join(skillsBaseDir, skillName);
     await fs.mkdir(skillDir, { recursive: true });
     await fs.writeFile(path.join(skillDir, 'SKILL.md'), '# Original Content', 'utf-8');
 
     await writeUserPresetWithSkills(
       env.presetsDir,
       'skip-skill-preset',
-      {
-        name: 'skip-skill-preset',
-        description: 'Skill skip test',
-        version: '1.0.0',
-        skills: ['skip-skill'],
-      },
-      {
-        'skip-skill': { 'SKILL.md': '# Override Content' },
-      },
+      { name: 'skip-skill-preset', description: 'Skill skip test', version: '1.0.0', skills: [skillName] },
+      { [skillName]: { 'SKILL.md': '# Override Content' } },
     );
 
     const logs = await captureLogs(async () => {
@@ -685,9 +681,7 @@ describe('skill deployment', () => {
 
     const content = await fs.readFile(path.join(skillDir, 'SKILL.md'), 'utf-8');
     expect(content).toBe('# Original Content');
-
-    const combined = logs!.join('\n');
-    expect(combined).toContain('Skipped skill');
+    expect(logs.join('\n')).toContain(`Skipped skill '${skillName}'`);
   });
 
   test('apply without skills field works normally', async () => {
