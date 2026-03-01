@@ -54,7 +54,9 @@ export function isSensitivePath(keyPath: string[]): boolean {
 }
 
 export function looksLikeSecret(value: unknown): boolean {
-  if (typeof value !== 'string' || value.length < 20) return false;
+  if (typeof value !== 'string' || value.length < 20) {
+    return false;
+  }
   return SECRET_VALUE_PATTERNS.some((pattern) => pattern.test(value));
 }
 
