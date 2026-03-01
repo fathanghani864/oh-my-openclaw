@@ -37,12 +37,7 @@ describe('exportCommand', () => {
   test('creates preset directory with preset.json5', async () => {
     await exportCommand('my-preset');
 
-    const presetDir = path.join(
-      tempStateDir,
-      'oh-my-openclaw',
-      'presets',
-      'my-preset'
-    );
+    const presetDir = path.join(tempStateDir, 'apex', 'presets', 'my-preset');
     const manifestPath = path.join(presetDir, 'preset.json5');
 
     const stat = await fs.stat(manifestPath);
@@ -55,12 +50,7 @@ describe('exportCommand', () => {
       version: '2.0.0',
     });
 
-    const presetDir = path.join(
-      tempStateDir,
-      'oh-my-openclaw',
-      'presets',
-      'fields-test'
-    );
+    const presetDir = path.join(tempStateDir, 'apex', 'presets', 'fields-test');
     const manifestPath = path.join(presetDir, 'preset.json5');
     const content = await fs.readFile(manifestPath, 'utf-8');
 
@@ -87,7 +77,7 @@ describe('exportCommand', () => {
 
     const presetDir = path.join(
       tempStateDir,
-      'oh-my-openclaw',
+      'apex',
       'presets',
       'sensitive-test'
     );
@@ -117,12 +107,7 @@ describe('exportCommand', () => {
     // Should not throw with --force
     await exportCommand('force-test', { force: true });
 
-    const presetDir = path.join(
-      tempStateDir,
-      'oh-my-openclaw',
-      'presets',
-      'force-test'
-    );
+    const presetDir = path.join(tempStateDir, 'apex', 'presets', 'force-test');
     const manifestPath = path.join(presetDir, 'preset.json5');
     const stat = await fs.stat(manifestPath);
     expect(stat.isFile()).toBe(true);
@@ -147,7 +132,7 @@ describe('exportCommand', () => {
 
     const presetDir = path.join(
       tempStateDir,
-      'oh-my-openclaw',
+      'apex',
       'presets',
       'workspace-test'
     );
@@ -177,7 +162,7 @@ describe('exportCommand', () => {
 
     const presetDir = path.join(
       tempStateDir,
-      'oh-my-openclaw',
+      'apex',
       'presets',
       'manifest-files-test'
     );
@@ -233,7 +218,7 @@ describe('exportCommand', () => {
 
     const presetDir = path.join(
       tempStateDir,
-      'oh-my-openclaw',
+      'apex',
       'presets',
       'no-config-test'
     );
@@ -256,7 +241,7 @@ describe('exportCommand', () => {
 
     const presetDir = path.join(
       tempStateDir,
-      'oh-my-openclaw',
+      'apex',
       'presets',
       'default-desc-test'
     );
@@ -272,7 +257,7 @@ describe('exportCommand', () => {
 
     const presetDir = path.join(
       tempStateDir,
-      'oh-my-openclaw',
+      'apex',
       'presets',
       'default-version-test'
     );
@@ -300,7 +285,7 @@ describe('exportCommand', () => {
 
     const presetDir = path.join(
       tempStateDir,
-      'oh-my-openclaw',
+      'apex',
       'presets',
       'roundtrip-test'
     );

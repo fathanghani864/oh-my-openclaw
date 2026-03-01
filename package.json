@@ -1,5 +1,5 @@
 {
-  "name": "oh-my-openclaw",
+  "name": "apex",
   "version": "1.0.0",
   "type": "module",
   "private": true,
@@ -10,7 +10,7 @@
     "check:types": "tsc --noEmit",
     "check": "bun run check:biome && bun run check:types",
     "build": "bun build src/cli.ts --outdir dist --target bun --format esm",
-    "build:compile": "bun build src/cli.ts --compile --bytecode --outfile dist/oh-my-openclaw",
+    "build:compile": "bun build src/cli.ts --compile --bytecode --outfile dist/apex",
     "test": "bun test",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist"

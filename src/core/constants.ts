@@ -28,5 +28,5 @@ export const DEFAULT_CONFIG_PATH = path.join(
   'openclaw.json'
 );
 
-export const OH_MY_OPENCLAW_DIR = 'oh-my-openclaw';
+export const APEX_DIR = 'apex';
 export const PRESET_MANIFEST_FILENAME = 'preset.json5';

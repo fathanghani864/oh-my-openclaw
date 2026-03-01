@@ -75,7 +75,7 @@ describe('diffCommand', () => {
     // Create a custom preset with null value (meaning delete)
     const presetsDir = path.join(
       tempStateDir,
-      'oh-my-openclaw',
+      'apex',
       'presets',
       'test-remove'
     );
@@ -164,7 +164,7 @@ describe('diffCommand', () => {
     // Create a minimal preset with no config
     const presetsDir = path.join(
       tempStateDir,
-      'oh-my-openclaw',
+      'apex',
       'presets',
       'empty-preset'
     );
@@ -212,12 +212,7 @@ describe('diffCommand', () => {
   });
 
   test('throws when user preset exists but manifest is invalid', async () => {
-    const userPresetDir = path.join(
-      tempStateDir,
-      'oh-my-openclaw',
-      'presets',
-      'apex'
-    );
+    const userPresetDir = path.join(tempStateDir, 'apex', 'presets', 'apex');
     await fs.mkdir(userPresetDir, { recursive: true });
     await fs.writeFile(path.join(userPresetDir, 'preset.json5'), '{', 'utf-8');
 
@@ -233,7 +228,7 @@ describe('diffCommand', () => {
   test('redacts sensitive values from diff output', async () => {
     const presetDir = path.join(
       tempStateDir,
-      'oh-my-openclaw',
+      'apex',
       'presets',
       'sensitive-diff'
     );

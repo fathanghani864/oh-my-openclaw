@@ -3,8 +3,8 @@ import os from 'node:os';
 import path from 'node:path';
 
 import {
+  APEX_DIR,
   DEFAULT_CONFIG_PATH,
-  OH_MY_OPENCLAW_DIR,
   PRESET_MANIFEST_FILENAME,
   SENSITIVE_FIELDS,
   WORKSPACE_FILES,
@@ -47,11 +47,11 @@ describe('core constants', () => {
     expect(DEFAULT_CONFIG_PATH).toBe(
       path.join(os.homedir(), '.openclaw', 'openclaw.json')
     );
-    expect(OH_MY_OPENCLAW_DIR).toBe('oh-my-openclaw');
+    expect(APEX_DIR).toBe('apex');
     expect(PRESET_MANIFEST_FILENAME).toBe('preset.json5');
 
     expect(DEFAULT_CONFIG_PATH).not.toHaveLength(0);
-    expect(OH_MY_OPENCLAW_DIR).not.toHaveLength(0);
+    expect(APEX_DIR).not.toHaveLength(0);
     expect(PRESET_MANIFEST_FILENAME).not.toHaveLength(0);
   });
 });

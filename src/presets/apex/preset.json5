@@ -2,7 +2,7 @@
   name: 'apex',
   description: 'All-in-one power assistant preset with secure prompt-guard defaults',
   version: '1.0.0',
-  author: 'oh-my-openclaw',
+  author: 'apex',
   tags: ['all-in-one', 'security', 'developer', 'assistant', 'tmux', 'prompt-guard', 'agent-browser'],
   builtin: true,
   config: {

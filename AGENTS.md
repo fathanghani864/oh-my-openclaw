@@ -6,14 +6,14 @@
 
 ## OVERVIEW
 
-Bun + TypeScript CLI for applying/exporting OpenClaw preset bundles. Runtime entry is `src/cli.ts` via Bun launcher (`bin/oh-my-openclaw.js`); compiled binary (`dist/oh-my-openclaw`) is the distribution path.
+Bun + TypeScript CLI for applying/exporting OpenClaw preset bundles. Runtime entry is `src/cli.ts` via Bun launcher (`bin/apex.js`); compiled binary (`dist/apex`) is the distribution path.
 
 ## STRUCTURE
 
 ```
-oh-my-openclaw/
+apex/
 ├── AGENTS.md                  # root policy + cross-module map
-├── bin/oh-my-openclaw.js      # Bun launcher; imports src/cli.ts directly
+├── bin/apex.js                # Bun launcher; imports src/cli.ts directly
 ├── src/
 │   ├── cli.ts                 # Commander wiring for list/apply/export/diff/install
 │   ├── commands/              # user-facing command flows
@@ -67,7 +67,7 @@ Implementation source: `src/core/merge.ts`.
 ## PRESET RESOLUTION ORDER
 
 0. GitHub ref (`owner/repo` or URL) -> clone/cache as user preset (`owner--repo`)
-1. User preset: `~/.openclaw/oh-my-openclaw/presets/<name>/`
+1. User preset: `~/.openclaw/apex/presets/<name>/`
 2. Built-in preset: `src/presets/<name>/`
 3. User preset with same name overrides built-in
 
@@ -102,9 +102,10 @@ bun run clean
 ## NOTES
 
 - `src/presets/apex/AGENTS.md` is preset payload content, not repository policy guidance.
-- `bin/oh-my-openclaw.js` runs source (`src/cli.ts`) directly; Bun runtime is required for launcher path.
+- `bin/apex.js` runs source (`src/cli.ts`) directly; Bun runtime is required for launcher path.
 - CI exists at `.github/workflows/code-quality.yml` and runs typecheck/lint/test/build.
-- `build:compile` output (`dist/oh-my-openclaw`) is the intended standalone executable.
+- `build:compile` output (`dist/apex`) is the intended standalone executable.
 - `diff` is a structural comparison against raw preset config; `apply` filters sensitive paths before merge, so outputs are not strict apply previews.
 - Apply flow ends with a manual operational step: run `openclaw gateway restart`.
 - Project policy allows aggressive cleanup/migrations for this local-only environment.
+- Legacy state directory (`~/.openclaw/oh-my-openclaw/`) is automatically migrated to `~/.openclaw/apex/` on first run.

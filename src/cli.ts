@@ -18,7 +18,7 @@ const pkg = require(join(__dirname, '..', 'package.json')) as {
 const program = new Command();
 
 program
-  .name('oh-my-openclaw')
+  .name('apex')
   .description('OpenClaw configuration preset manager')
   .version(pkg.version);
 

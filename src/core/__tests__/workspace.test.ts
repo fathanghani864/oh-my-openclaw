@@ -18,9 +18,7 @@ import {
 let tempDir: string;
 
 beforeEach(async () => {
-  tempDir = await mkdtemp(
-    path.join(tmpdir(), 'oh-my-openclaw-workspace-test-')
-  );
+  tempDir = await mkdtemp(path.join(tmpdir(), 'apex-workspace-test-'));
 });
 
 afterEach(async () => {

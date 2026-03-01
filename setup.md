@@ -45,7 +45,7 @@ openclaw --help
 ## Step 3 — Apply the apex preset
 
 ```bash
-./dist/oh-my-openclaw install
+./dist/apex install
 ```
 
 Notes:
@@ -189,7 +189,7 @@ If any command fails:
 |-------|-----|
 | `Unknown channel: telegram` | `openclaw plugins enable telegram` first |
 | `Unknown channel: discord` | `openclaw plugins enable discord` first |
-| `Preset not found` | Use `./dist/oh-my-openclaw install`, not `apply developer` |
+| `Preset not found` | Use `./dist/apex install`, not `apply developer` |
 | `Invalid config` / migration warnings | `openclaw doctor --fix` |
 | `gateway.mode is unset` | `openclaw config set gateway.mode local` |
 | `gateway run` fails (port in use) | `openclaw gateway run --force` |
@@ -208,7 +208,7 @@ If the gateway is completely broken or you want to start fresh:
 
 ```bash
 # 1. Apply apex preset (auto-migrates legacy keys)
-./dist/oh-my-openclaw install
+./dist/apex install
 
 # 2. Fix any remaining config issues
 openclaw doctor --fix --yes

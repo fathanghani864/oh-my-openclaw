@@ -1,9 +1,9 @@
-# oh-my-openclaw
+# apex
 
 OpenClaw configuration preset manager.
 
 ## What is this?
-oh-my-openclaw is a CLI utility for managing configuration presets for [OpenClaw](https://github.com/minpeter/openclaw), a self-hosted AI agent gateway. It allows you to switch between different agent personalities, toolsets, and model configurations with a single command by bundling `openclaw.json` overrides and workspace markdown files.
+apex is a CLI utility for managing configuration presets for [OpenClaw](https://github.com/minpeter/openclaw), a self-hosted AI agent gateway. It allows you to switch between different agent personalities, toolsets, and model configurations with a single command by bundling `openclaw.json` overrides and workspace markdown files.
 
 ## Quick Start
 
@@ -19,22 +19,22 @@ Prerequisites: [Bun](https://bun.sh)
    ```bash
    bun run build:compile
    ```
-4. Add the resulting binary in `dist/oh-my-openclaw` to your PATH or run it directly.
+4. Add the resulting binary in `dist/apex` to your PATH or run it directly.
 
 ### Basic Workflow
-1. **List** available presets: `oh-my-openclaw list`
-2. **Diff** a preset against your current config: `oh-my-openclaw diff apex`
-3. **Apply** the preset: `oh-my-openclaw apply apex`
-4. **Install** apex quickly: `oh-my-openclaw install`
-5. **Export** your current setup as a new preset: `oh-my-openclaw export my-custom-setup`
-6. **Apply** a preset from GitHub: `oh-my-openclaw apply minpeter/demo-researcher`
+1. **List** available presets: `apex list`
+2. **Diff** a preset against your current config: `apex diff apex`
+3. **Apply** the preset: `apex apply apex`
+4. **Install** apex quickly: `apex install`
+5. **Export** your current setup as a new preset: `apex export my-custom-setup`
+6. **Apply** a preset from GitHub: `apex apply minpeter/demo-researcher`
 
 ## Commands
 
 ### list
 Lists all built-in and user-defined presets.
 ```bash
-oh-my-openclaw list
+apex list
 ```
 **Example Output:**
 ```
@@ -48,7 +48,7 @@ Available presets:
 ### apply
 Applies a preset to your OpenClaw configuration. It merges the preset's JSON config into your `openclaw.json`, copies any bundled workspace files (like `AGENTS.md`) to your `.openclaw` directory, and installs any bundled skills to `~/.agents/skills/`. The `<preset>` argument can be a local preset name, a GitHub shorthand (`owner/repo`), or a full GitHub URL (`https://github.com/owner/repo`).
 ```bash
-oh-my-openclaw apply <preset> [options]
+apex apply <preset> [options]
 ```
 - **Arguments:** `<preset>` - Name of the preset to apply.
 - **Flags:**
@@ -60,7 +60,7 @@ oh-my-openclaw apply <preset> [options]
 ### install
 Installs the apex preset (shortcut for `apply apex`).
 ```bash
-oh-my-openclaw install [options]
+apex install [options]
 ```
 - **Flags:**
   - `--dry-run`: Show what would change without making any modifications.
@@ -70,7 +70,7 @@ oh-my-openclaw install [options]
 ### export
 Saves your current `openclaw.json` and workspace markdown files as a new reusable preset.
 ```bash
-oh-my-openclaw export <name> [options]
+apex export <name> [options]
 ```
 - **Arguments:** `<name>` - Name for the new preset.
 - **Flags:**
@@ -81,7 +81,7 @@ oh-my-openclaw export <name> [options]
 ### diff
 Shows a structural comparison between your current configuration and a specific preset.
 ```bash
-oh-my-openclaw diff <preset> [options]
+apex diff <preset> [options]
 ```
 - **Flags:**
   - `--json`: Output the diff in JSON format.
@@ -95,7 +95,7 @@ oh-my-openclaw diff <preset> [options]
 ## How It Works
 
 ### Deep Merge Semantics
-When applying a preset, oh-my-openclaw uses a deep merge strategy for `openclaw.json`:
+When applying a preset, apex uses a deep merge strategy for `openclaw.json`:
 - **Scalars (String, Number, Boolean):** Overwrite existing values.
 - **Objects:** Merged recursively.
 - **Arrays:** Entirely replaced by the preset's array.
@@ -110,10 +110,10 @@ To prevent accidental exposure of secrets, certain fields are filtered during ex
 - `channels.*.botToken`, `channels.*.token`
 
 ### Automatic Backups
-Before applying changes, oh-my-openclaw creates timestamped backups in `~/.openclaw/oh-my-openclaw/backups/` (for `openclaw.json`, plus workspace backups when workspace files are replaced).
+Before applying changes, apex creates timestamped backups in `~/.openclaw/apex/backups/` (for `openclaw.json`, plus workspace backups when workspace files are replaced).
 
 ## Creating Custom Presets
-Presets are stored in `~/.openclaw/oh-my-openclaw/`. You can create them manually by making a directory with a `preset.json5` file and any accompanying markdown files (`AGENTS.md`, `SOUL.md`, etc.).
+Presets are stored in `~/.openclaw/apex/`. You can create them manually by making a directory with a `preset.json5` file and any accompanying markdown files (`AGENTS.md`, `SOUL.md`, etc.).
 
 ### Preset Format Example (`preset.json5`)
 ```json5
@@ -139,16 +139,16 @@ You can apply presets directly from public GitHub repositories without any local
 
 ```bash
 # Apply by shorthand (owner/repo)
-oh-my-openclaw apply minpeter/demo-researcher
+apex apply minpeter/demo-researcher
 
 # Apply by full GitHub URL
-oh-my-openclaw apply https://github.com/minpeter/demo-researcher
+apex apply https://github.com/minpeter/demo-researcher
 
 # Force re-download (ignores local cache)
-oh-my-openclaw apply minpeter/demo-researcher --force
+apex apply minpeter/demo-researcher --force
 ```
 
-Remote presets are automatically cached as user presets at `~/.openclaw/oh-my-openclaw/presets/owner--repo/`. Subsequent applies reuse the cached version unless `--force` is specified.
+Remote presets are automatically cached as user presets at `~/.openclaw/apex/presets/owner--repo/`. Subsequent applies reuse the cached version unless `--force` is specified.
 
 > **Note**: Only public GitHub repositories are supported. Private repos require authentication which is not currently supported.
 

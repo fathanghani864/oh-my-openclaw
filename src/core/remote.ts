@@ -116,9 +116,7 @@ export async function cloneToCache(
     return cachePath;
   }
 
-  const tmpDir = await fs.mkdtemp(
-    path.join(os.tmpdir(), 'oh-my-openclaw-remote-')
-  );
+  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'apex-remote-'));
 
   try {
     await withTimeout(

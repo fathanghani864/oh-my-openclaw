@@ -26,8 +26,8 @@ async function createTempEnv(prefix: string): Promise<TempEnv> {
   const stateDir = path.join(rootDir, '.openclaw');
   const configPath = path.join(stateDir, 'openclaw.json');
   const workspaceDir = path.join(stateDir, 'workspace');
-  const presetsDir = path.join(stateDir, 'oh-my-openclaw', 'presets');
-  const backupsDir = path.join(stateDir, 'oh-my-openclaw', 'backups');
+  const presetsDir = path.join(stateDir, 'apex', 'presets');
+  const backupsDir = path.join(stateDir, 'apex', 'backups');
 
   await fs.mkdir(workspaceDir, { recursive: true });
   await fs.mkdir(presetsDir, { recursive: true });

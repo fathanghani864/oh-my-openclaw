@@ -57,7 +57,7 @@ When you learn something new or develop improved capabilities, follow this workf
 ### Workflow Steps:
 1. **Update Apex Preset**: Clone `minpeter/apex` and update the apex preset configuration (`src/presets/apex/preset.json5` or related workspace files).
 2. **Build**: Run `bun run build:compile` to compile the updated preset.
-3. **Apply**: Execute `./dist/oh-my-openclaw apply apex` to apply the updated configuration.
+3. **Apply**: Execute `./dist/apex apply apex` to apply the updated configuration.
 4. **Restart**: Run `openclaw gateway restart` to activate changes.
 5. **Verify**: Confirm that changes are live and functioning correctly.
 

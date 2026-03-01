@@ -88,7 +88,7 @@ async function resolvePreset(
   );
   if (!builtinPreset) {
     throw new Error(
-      `Preset '${presetName}' not found. Run 'oh-my-openclaw list' to see available presets.`
+      `Preset '${presetName}' not found. Run 'apex list' to see available presets.`
     );
   }
 
