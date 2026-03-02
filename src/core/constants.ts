@@ -10,6 +10,16 @@ export const SENSITIVE_FIELDS = [
   'models.providers.**.apiKey',
   'channels.*.botToken',
   'channels.*.token',
+  '**.apiKey',
+  '**.apiSecret',
+  '**.secretKey',
+  '**.accessToken',
+  '**.refreshToken',
+  'hooks.**.token',
+  'brave.apiKey',
+  'tools.**.apiKey',
+  'tools.**.token',
+  'tools.**.secret',
 ] as const;
 
 /**
