@@ -98,19 +98,29 @@ Then ask the user to paste the token (free-text input).
 
 ## Step 2 — Install Openclaw CLI and oh-my-openclaw
 
-> **IMPORTANT:** The `openclaw` CLI and `oh-my-openclaw` are **separate** npm packages.
+> **IMPORTANT:** The `openclaw` CLI and `oh-my-openclaw` are **separate** packages.
 > - `openclaw` — the main CLI tool (provides the `openclaw` command)
 > - `oh-my-openclaw` — the preset manager (provides the `apex` command)
 >
 > You must install **both**. Installing only `oh-my-openclaw` will NOT give you the `openclaw` command.
 
+**Preferred (bun):**
+```bash
+bun add -g openclaw oh-my-openclaw
+```
+
+If `bun` is not installed, bootstrap it first with `bunx bun` or install via `curl -fsSL https://bun.sh/install | bash`.
+
+**Fallback (npm):**
 ```bash
 npm install -g openclaw oh-my-openclaw
+```
+
+Verify both commands are available:
+```bash
 openclaw --version
 apex --version
 ```
-
-Verify that both commands are available before proceeding.
 
 ---
 
@@ -281,8 +291,8 @@ If any command fails:
 
 | Error | Fix |
 |-------|-----|
-| `command not found: openclaw` | `npm install -g openclaw` (separate from `oh-my-openclaw`) |
-| `command not found: apex` | `npm install -g oh-my-openclaw` (provides the `apex` command) |
+| `command not found: openclaw` | `bun add -g openclaw` (separate from `oh-my-openclaw`). Fallback: `npm install -g openclaw` |
+| `command not found: apex` | `bun add -g oh-my-openclaw` (provides the `apex` command). Fallback: `npm install -g oh-my-openclaw` |
 | `unknown command 'presets'` | Use `apex apply apex` instead — OpenClaw has no `presets` subcommand |
 | `Unknown channel: telegram` | `openclaw plugins enable telegram` first |
 | `Unknown channel: discord` | `openclaw plugins enable discord` first |
@@ -303,8 +313,8 @@ If any command fails:
 If the gateway is completely broken or you want to start fresh:
 
 ```bash
-# 1. Ensure both packages are installed
-npm install -g openclaw oh-my-openclaw
+# 1. Ensure both packages are installed (prefer bun, fallback: npm install -g)
+bun add -g openclaw oh-my-openclaw
 
 # 2. Apply apex preset (auto-migrates legacy keys)
 apex apply apex
