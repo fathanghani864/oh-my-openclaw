@@ -14,6 +14,13 @@ docker compose logs -f openclaw
 
 To pin a specific published image instead of `latest`, set `OPENCLAW_IMAGE` in `.env` before starting Compose.
 
+If you want to force a local image build from the current checkout, the old flow still works:
+
+```bash
+docker compose down -v
+docker compose up --build
+```
+
 ## Step 1 — Gather all required information upfront
 
 Before doing anything else, use the `AskUserQuestion` tool to collect all configuration interactively. The user should never have to type free-form prompts for selection-based questions — always present choices as selectable options.
