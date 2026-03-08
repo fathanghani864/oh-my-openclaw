@@ -29,6 +29,22 @@ https://raw.githubusercontent.com/minpeter/oh-my-openclaw/main/setup.md
 5. **Export** your current setup as a new preset: `oh-my-openclaw export my-custom-setup`
 6. **Apply** a preset from GitHub: `oh-my-openclaw apply minpeter/demo-researcher`
 
+### Docker Compose Tips
+
+If you want to force a fresh local Docker build from the current checkout instead of using the published image, reset the stack and rebuild without pulling a remote image:
+
+```bash
+docker compose down -v && docker compose up --build --pull never
+```
+
+If OpenClaw is running inside the Compose service and you receive a Telegram pairing code, approve it from inside the container:
+
+```bash
+docker compose exec openclaw openclaw pairing approve telegram <CODE>
+```
+
+For the full Docker setup flow, including `.env` preparation and gateway startup, see [`setup.md`](./setup.md).
+
 ## Commands
 
 ### list
